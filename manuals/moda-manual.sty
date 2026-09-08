@@ -1,0 +1,130 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{moda-manual}[2026/09/08 Moda Interact manual support]
+
+\RequirePackage[a4paper,margin=22mm,headheight=16pt]{geometry}
+\RequirePackage{fontspec}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{hyperref}
+\RequirePackage{enumitem}
+\RequirePackage{longtable}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{array}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{microtype}
+\RequirePackage{lastpage}
+
+\IfFontExistsTF{Noto Sans}{\setmainfont{Noto Sans}}{\setmainfont{DejaVu Sans}}
+\IfFontExistsTF{Noto Sans Mono}{\setmonofont{Noto Sans Mono}}{\setmonofont{DejaVu Sans Mono}}
+
+\definecolor{ModaGreen}{HTML}{1F5D42}
+\definecolor{ModaLightGreen}{HTML}{EAF4EF}
+\definecolor{ModaDark}{HTML}{17372B}
+\definecolor{ModaGrey}{HTML}{5E6662}
+\definecolor{ModaLightGrey}{HTML}{F3F5F4}
+\definecolor{ModaAmber}{HTML}{8A5A00}
+\definecolor{ModaAmberBg}{HTML}{FFF7E0}
+\definecolor{ModaRed}{HTML}{8B1E1E}
+\definecolor{ModaRedBg}{HTML}{FDECEC}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=ModaGreen,
+  urlcolor=ModaGreen,
+  citecolor=ModaGreen,
+  pdftitle={Moda Interact Manual}
+}
+
+\setlist[itemize]{leftmargin=1.45em,itemsep=0.25em,topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.55em,itemsep=0.3em,topsep=0.35em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{ModaDark}}
+  {\chaptertitlename\ \thechapter}{8pt}{\Huge}
+\titleformat{\section}{\Large\bfseries\color{ModaDark}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{ModaGreen}}{\thesubsection}{0.7em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{ModaGrey}{Moda Interact}}
+\fancyhead[R]{\textcolor{ModaGrey}{\ManualDocumentShortTitle}}
+\fancyfoot[L]{\textcolor{ModaGrey}{\ManualVersion}}
+\fancyfoot[R]{\textcolor{ModaGrey}{Page \thepage\ of \pageref*{LastPage}}}
+\renewcommand{\headrulewidth}{0.2pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\ModaRule}{\par\noindent\textcolor{ModaGreen}{\rule{\linewidth}{1.2pt}}\par}
+
+\newcommand{\ModaMakeTitle}{%
+  \begin{titlepage}
+    \vspace*{18mm}
+    {\Large\bfseries\color{ModaGreen} MODA INTERACT\par}
+    \vspace{6mm}
+    {\Huge\bfseries\color{ModaDark}\ManualTitle\par}
+    \vspace{3mm}
+    {\Large\color{ModaGrey}\ManualSubtitle\par}
+    \vspace{10mm}
+    \ModaRule
+    \vspace{8mm}
+    \begin{tabular}{@{}>{\bfseries}p{0.26\linewidth}p{0.66\linewidth}@{}}
+      Audience & \ManualAudience\\[4pt]
+      Version & \ManualVersion\\[4pt]
+      Status & \ManualStatus\\[4pt]
+      Source review & \ManualSourceReview\\[4pt]
+      Manual locale & \ManualLocale\\
+    \end{tabular}
+    \vfill
+    {\small\color{ModaGrey}\ManualFrontNote\par}
+  \end{titlepage}
+}
+
+\newcommand{\ModaCallout}[3]{%
+  \begin{center}
+  \fcolorbox{#1}{#2}{\begin{minipage}{0.92\linewidth}\textbf{#3}\end{minipage}}
+  \end{center}
+}
+\newcommand{\ModaNote}[1]{\ModaCallout{ModaGreen}{ModaLightGreen}{#1}}
+\newcommand{\ModaWarning}[1]{\ModaCallout{ModaAmber}{ModaAmberBg}{#1}}
+\newcommand{\ModaCritical}[1]{\ModaCallout{ModaRed}{ModaRedBg}{#1}}
+\newcommand{\ModaCurrentState}[1]{\ModaCallout{ModaGrey}{ModaLightGrey}{\textbf{Current implementation note.} #1}}
+
+\newcommand{\ModaScreenshot}[2]{%
+  \begin{figure}[htbp]
+  \centering
+  \IfFileExists{#1.\ManualLocale.png}{%
+    \includegraphics[width=\linewidth,height=0.60\textheight,keepaspectratio]{#1.\ManualLocale.png}%
+  }{\IfFileExists{#1.\ManualLocale.jpg}{%
+    \includegraphics[width=\linewidth,height=0.60\textheight,keepaspectratio]{#1.\ManualLocale.jpg}%
+  }{\IfFileExists{#1.\ManualLocale.jpeg}{%
+    \includegraphics[width=\linewidth,height=0.60\textheight,keepaspectratio]{#1.\ManualLocale.jpeg}%
+  }{\IfFileExists{#1.\ManualLocale.pdf}{%
+    \includegraphics[width=\linewidth,height=0.60\textheight,keepaspectratio]{#1.\ManualLocale.pdf}%
+  }{%
+    \fbox{\begin{minipage}[c][0.27\textheight][c]{0.92\linewidth}
+      \centering
+      \textbf{Localized screenshot placeholder}\\[8pt]
+      Place one of the following files beside the main \texttt{.tex} file:\\[5pt]
+      \texttt{#1.\ManualLocale.png}\\
+      \texttt{#1.\ManualLocale.jpg}\\
+      \texttt{#1.\ManualLocale.pdf}\\[8pt]
+      Screenshot ID: \texttt{#1}
+    \end{minipage}}
+  }}}}
+  \caption{#2}
+  \label{fig:#1}
+  \end{figure}
+}
+
+\newcommand{\ModaField}[2]{\textbf{#1}: #2}
+\newcommand{\ModaPath}[1]{\texttt{#1}}
+\newcommand{\ModaStatus}[1]{\textbf{#1}}
+\newcommand{\ModaUI}[1]{\textbf{#1}}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}

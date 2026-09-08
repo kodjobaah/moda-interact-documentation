@@ -1,0 +1,452 @@
+\chapter{About this training guide}
+
+This guide trains internal administrators and support personnel to use the Moda Interact administration console safely and consistently. It is intentionally written as a living operational document because the product scope is still being finalised.
+
+\ModaCurrentState{The reviewed admin console currently covers tenant investigation and administration, merchant support threads, billing-plan mappings, private observability links, and a read-only BullMQ/Redis queue monitor. The console currently loads an English admin catalogue. Documentation localization is deliberately independent from that limitation.}
+
+\section{Training objectives}
+After completing this guide, an administrator should be able to:
+\begin{itemize}
+  \item sign in to the platform administration console using an authorised Google identity;
+  \item find a merchant tenant by brand/domain and review its current state;
+  \item change the tenant's active/suspended state and recovery delay where authorised;
+  \item investigate customer recovery records, conversations, cart contents and lifecycle history;
+  \item triage merchant support messages, take ownership, reply, and request translations;
+  \item understand which merchant-support actions require a \ModaStatus{SUPER\_ADMIN};
+  \item review and, where authorised, maintain billing-plan mappings;
+  \item use the private Grafana links for logs, traces, metrics and platform dashboards;
+  \item use the Shopify queue monitor as a read-only diagnostic view;
+  \item collect useful evidence before escalating a product or infrastructure incident.
+\end{itemize}
+
+\section{Role model}
+The current admin implementation distinguishes two platform roles.
+
+\begin{longtable}{P{0.25\linewidth}P{0.66\linewidth}}
+\toprule
+\textbf{Role} & \textbf{Current operational meaning}\\
+\midrule
+\endhead
+Platform admin & Can authenticate to the protected console and perform normal protected admin reads/mutations, including tenant administration and merchant-support ownership/replies.\\
+SUPER\_ADMIN & Includes normal platform-admin capabilities and additionally controls privileged billing-plan mutations, merchant-support reassignment, release overrides, and global failed-translation reconciliation.\\
+\bottomrule
+\end{longtable}
+
+\ModaWarning{A screen being visible does not necessarily mean every action is permitted for every role. In the current billing page, for example, mutations are enforced server-side as SUPER\_ADMIN-only.}
+
+\section{Documentation conventions}
+\begin{itemize}
+  \item \textbf{Current implementation note} identifies a behaviour observed in the reviewed codebase that may change as the product evolves.
+  \item \textbf{Warning} identifies a step with operational impact or a limitation that support staff should understand before acting.
+  \item Screenshot placeholders are deliberate. A localized image is loaded by screenshot ID and manual locale, for example \ModaPath{admin-tenant-directory.fr.png}.
+\end{itemize}
+
+\chapter{Accessing the administration console}
+
+\section{Authentication}
+The hosted admin console uses Google authentication and restricts access to provisioned, active platform-administrator records. The current authentication session lifetime is eight hours.
+
+\begin{enumerate}
+  \item Open the Moda Interact administration URL for the environment you are supporting.
+  \item On the login page, select \ModaUI{Continue with Google}.
+  \item Sign in with the Google account that has been provisioned for platform administration.
+  \item If the account is not authorised, the console returns to the login screen with an unauthorised message.
+\end{enumerate}
+
+\ModaScreenshot{admin-login}{Platform administrator login screen.}
+
+\ModaCritical{Do not use development authentication bypass behaviour as a production support procedure. Hosted environments are expected to enforce the provisioned Google administrator identity.}
+
+\section{Main navigation}
+The current sidebar exposes:
+\begin{itemize}
+  \item \ModaUI{Tenant Directory};
+  \item \ModaUI{Merchant Messages};
+  \item \ModaUI{Billing Plans};
+  \item \ModaUI{Observability}, including the Shopify queue view and Grafana destination.
+\end{itemize}
+
+\chapter{Tenant Directory}
+
+\section{What the directory shows}
+The tenant directory is the primary entry point for merchant investigation. Its platform summary includes active tenants, active recoveries, and active job counts for core queues when queue data is available.
+
+The current queue summary includes:
+\begin{itemize}
+  \item Checkout Events;
+  \item Order Events;
+  \item Pending Recoveries;
+  \item WhatsApp Events.
+\end{itemize}
+
+\ModaScreenshot{admin-tenant-directory}{Tenant directory and platform summary.}
+
+\section{Finding a merchant}
+Use the tenant search to match a merchant by brand name or Shopify domain. The tenant directory is paginated.
+
+A good support habit is to confirm the tenant/domain before discussing customer-level recovery information. This prevents an investigation from drifting into the wrong merchant context.
+
+\ModaScreenshot{admin-tenant-search}{Tenant search and tenant selection.}
+
+\section{Tenant detail panel}
+Selecting a tenant opens tenant details with two main tabs:
+\begin{itemize}
+  \item \ModaUI{Administration};
+  \item \ModaUI{Recovery Logs}.
+\end{itemize}
+
+The Administration tab presents lifecycle/status controls alongside billing and onboarding state.
+
+\subsection{Editable tenant controls}
+The current implementation allows the following tenant changes:
+\begin{itemize}
+  \item \ModaField{Shop status}{ACTIVE or SUSPENDED};
+  \item \ModaField{Recovery delay}{0 to 10,080 minutes}.
+\end{itemize}
+
+The same panel displays, but does not currently edit, installed/uninstalled timestamps, plan, subscription status, billing period dates and onboarding completion state.
+
+\ModaScreenshot{admin-tenant-administration}{Tenant administration controls and billing/onboarding summary.}
+
+\ModaWarning{Suspending a shop is an operationally significant change. Record the support/incident reason in the external case record used by your organisation. The current tenant form itself does not include a free-text reason field.}
+
+\section{Recovery Logs}
+The Recovery Logs tab lets support staff move from merchant to customer to individual recovery.
+
+\subsection{Customer search}
+Customers can be searched by name, email or phone. The result view is paginated and shows customer contact information and abandoned-cart counts where available.
+
+\ModaScreenshot{admin-recovery-logs-customers}{Customer list within a tenant's Recovery Logs tab.}
+
+\subsection{Recovery list}
+Selecting a customer shows the customer's recoveries, including:
+\begin{itemize}
+  \item detection time;
+  \item cart value and currency;
+  \item recovery status;
+  \item outcome.
+\end{itemize}
+
+Selecting a recovery opens a right-side detail drawer.
+
+\section{Recovery detail drawer}
+The current recovery drawer has three tabs.
+
+\subsection{Conversation}
+Use this tab to review WhatsApp/conversation messages associated with the recovery. Message lists are paginated when necessary.
+
+\ModaScreenshot{admin-recovery-detail-conversation}{Recovery detail - Conversation tab.}
+
+\subsection{Cart Details}
+Use this tab to inspect line items from the stored checkout payload and, when available, open the checkout link.
+
+\ModaScreenshot{admin-recovery-detail-cart}{Recovery detail - Cart Details tab.}
+
+\subsection{Lifecycle}
+Use this tab to understand the recovery lifecycle and recorded status transitions/events.
+
+\ModaScreenshot{admin-recovery-detail-lifecycle}{Recovery detail - Lifecycle tab.}
+
+\section{Suggested tenant investigation sequence}
+For a merchant asking ``Why did this recovery happen?'' or ``Why did it not recover?'', use this sequence:
+\begin{enumerate}
+  \item Confirm the tenant and Shopify domain.
+  \item Check shop status and recovery delay.
+  \item Check subscription/onboarding state displayed in Administration.
+  \item Open Recovery Logs and locate the customer.
+  \item Open the relevant recovery and compare Lifecycle, Conversation and Cart Details.
+  \item If the issue appears asynchronous or infrastructure-related, continue to the Shopify queue view and Grafana evidence described later in this guide.
+\end{enumerate}
+
+\chapter{Merchant Messages}
+
+\section{Purpose}
+Merchant Messages is the internal support inbox for durable merchant-support conversations. The page shows support threads that currently require an administrative response.
+
+\ModaScreenshot{admin-merchant-messages}{Merchant Messages pending-thread view.}
+
+\section{Finding a support thread}
+The current page supports:
+\begin{itemize}
+  \item filters: All pending, Unassigned, Assigned to me, Assigned to others;
+  \item paginated pending threads;
+  \item search/suggestions by shop brand name or domain;
+  \item direct selection of a matching support thread.
+\end{itemize}
+
+Search suggestions begin after two characters, are debounced, and are capped by the UI.
+
+\section{Ownership workflow}
+A support thread has a single assigned platform administrator or is unassigned.
+
+\begin{enumerate}
+  \item Open the pending thread.
+  \item If unassigned, select \ModaUI{Take} before replying.
+  \item Once you own the thread, compose the administrative response.
+  \item If responsibility needs to move, release the thread when allowed.
+  \item A SUPER\_ADMIN can reassign a thread to another active administrator ID and can release ownership as an override.
+\end{enumerate}
+
+\ModaScreenshot{admin-support-thread}{Support thread history, ownership controls and reply box.}
+
+\ModaCurrentState{Only the current owner may send an administrative reply. The reply body is bounded to 1-500 Unicode graphemes.}
+
+\section{Understanding message states}
+Messages can be merchant-authored, administrative, or system messages. The UI also shows read state and translation state.
+
+For translation-aware support work:
+\begin{itemize}
+  \item the original body remains available;
+  \item available translations can be selected by language tag;
+  \item a failed translation can be retried/reconciled;
+  \item an additional translation can be requested for one of the currently supported translation languages;
+  \item a SUPER\_ADMIN can trigger global reconciliation of failed translations.
+\end{itemize}
+
+\ModaScreenshot{admin-support-translation}{Support message translation controls and original/translated text.}
+
+\section{Supported translation languages in the current support UI}
+\begin{longtable}{@{}P{0.15\linewidth}P{0.27\linewidth}P{0.15\linewidth}P{0.27\linewidth}@{}}
+\toprule
+\textbf{Code} & \textbf{Language} & \textbf{Code} & \textbf{Language}\\
+\midrule
+\endhead
+cs & Czech & da & Danish\\
+de & German & en & English\\
+es & Spanish & fi & Finnish\\
+fr & French & it & Italian\\
+ja & Japanese & ko & Korean\\
+nb & Norwegian Bokm\aa l & nl & Dutch\\
+pl & Polish & pt-BR & Portuguese (Brazil)\\
+pt-PT & Portuguese (Portugal) & sv & Swedish\\
+th & Thai & tr & Turkish\\
+zh-Hans & Chinese (Simplified) & zh-Hant & Chinese (Traditional)\\
+\bottomrule
+\end{longtable}
+
+\section{Support reply checklist}
+Before sending a reply:
+\begin{itemize}
+  \item confirm you own the thread;
+  \item confirm the tenant/domain;
+  \item read the most recent merchant message and any system messages;
+  \item if using a translation, check whether you are viewing the translation or original text;
+  \item keep the reply within the 500-grapheme limit;
+  \item avoid claiming a recovery, refund, billing adjustment or queue intervention has happened unless the application evidence confirms it.
+\end{itemize}
+
+\chapter{Billing Plans}
+
+\section{What this page is for}
+The Billing Plans page maintains Moda Interact's internal mapping to Shopify-created plan and usage-event handles. Shopify owns the commercial pricing surface; the admin catalog stores the exact handles and Moda entitlement/safety policy.
+
+\ModaScreenshot{admin-billing-plans}{Billing plan catalog and plan mapping form.}
+
+\ModaCritical{Billing-plan mutations are SUPER\_ADMIN-only in the current implementation. A normal platform administrator should treat this page as informational and escalate required catalog changes.}
+
+\section{Plan mapping fields}
+The current form includes:
+\begin{itemize}
+  \item Shopify plan handle;
+  \item display name;
+  \item plan kind: FREE or PAID\_METERED;
+  \item Shopify usage-event handle for paid metered plans;
+  \item Free lifetime conversation allowance for Free plans;
+  \item default outbound soft limit;
+  \item default outbound hard limit;
+  \item reserved terminal response slots;
+  \item feature flags: Checkout recovery, AI conversations, Product search, Order support;
+  \item a required mutation reason.
+\end{itemize}
+
+\section{Important billing invariants}
+The server currently enforces the following rules:
+\begin{itemize}
+  \item Shopify plan handles are immutable after creation; deactivate the mapping and create a new one if the handle must change.
+  \item FREE plans require a positive lifetime conversation allowance and cannot have a Shopify usage-event handle.
+  \item PAID\_METERED plans require an exact Shopify usage-event handle and cannot use a Free lifetime allowance.
+  \item soft and hard limits must be positive integers; the soft limit cannot exceed the hard limit.
+  \item reserved terminal slots must be positive and lower than the hard limit.
+  \item changing an existing usage-event handle requires explicit confirmation because historical usage events retain their previous handle.
+  \item each catalog mutation records an audit event and requires a bounded reason.
+\end{itemize}
+
+\section{Activation and deactivation}
+Each plan mapping can be activated or deactivated. Use this deliberately: the state controls whether a plan mapping is active in Moda's billing catalog; it is not the same as editing the merchant's Shopify subscription directly.
+
+\chapter{Observability}
+
+\section{Private Grafana access}
+The Observability page is a navigation surface into Moda Interact's private Grafana Cloud workspace. Depending on environment configuration, it can provide links for the main platform dashboard, logs, traces and metrics.
+
+\ModaScreenshot{admin-observability}{Observability page with private Grafana destinations.}
+
+\ModaCurrentState{Grafana authentication is handled by Grafana Cloud and is separate from the Moda admin session. If no valid Grafana destination is configured, the admin console continues to provide its other administration features.}
+
+\section{When to use logs, traces and metrics}
+\begin{longtable}{P{0.2\linewidth}P{0.7\linewidth}}
+\toprule
+\textbf{Evidence type} & \textbf{Use it when}\\
+\midrule
+\endhead
+Logs & You need the specific application/infrastructure event, error message, correlation data or provider failure detail.\\
+Traces & You need to follow a request/workflow across service boundaries or understand where latency/failure occurred.\\
+Metrics & You need trends, rates, saturation, error-rate changes, queue/worker capacity signals or environment health.\\
+\bottomrule
+\end{longtable}
+
+\chapter{Shopify Queues}
+
+\section{Purpose and safety boundary}
+The Shopify Queues page is a read-only operational monitor backed by Redis/BullMQ data. It is designed to help administrators understand current queue state and recent jobs without providing destructive queue controls.
+
+\ModaScreenshot{admin-shopify-queues}{Shopify queue operational summary.}
+
+\ModaCritical{The current queue monitor does not provide retry, delete, promote, pause or drain controls. Do not treat the diagnostic UI as a queue-management console.}
+
+\section{Queue summary}
+The page can show queue/job state, workers and recent Redis activity. Queue snapshots can become temporarily unavailable; the UI attempts to preserve the last successful snapshot where possible.
+
+The refresh control supports manual refresh and configurable polling, including a paused state.
+
+\section{Opening queue details}
+Selecting a queue opens a resizable detail panel. Administrators can review recent/all jobs using filters such as:
+\begin{itemize}
+  \item job status;
+  \item shop attribution, including unresolved/orphan categories;
+  \item ascending/descending direction;
+  \item page and result count.
+\end{itemize}
+
+\ModaScreenshot{admin-queue-details}{Selected queue details and job list.}
+
+\section{Job detail}
+Selecting a job can expose diagnostic fields including:
+\begin{itemize}
+  \item queue name and job name;
+  \item job ID;
+  \item shop attribution;
+  \item attempts made;
+  \item queued/processed/finished timestamps;
+  \item failure reason;
+  \item stack trace;
+  \item payload/job data.
+\end{itemize}
+
+\ModaScreenshot{admin-queue-job-details}{Queue job diagnostic detail.}
+
+\ModaWarning{Payload/job data is operational evidence. Treat it as support data: copy only what is necessary into an incident record and avoid forwarding customer or tenant data outside approved support channels.}
+
+\section{Interpreting disappearing jobs}
+Completed jobs may disappear quickly because BullMQ can remove completed jobs according to queue configuration. A missing job after refresh does not, by itself, prove that it never existed.
+
+\chapter{Support and incident playbooks}
+
+\section{Merchant reports that a recovery did not start}
+\begin{enumerate}
+  \item Confirm tenant status is ACTIVE.
+  \item Confirm the recovery delay currently configured for the tenant.
+  \item Check onboarding/subscription state displayed in tenant Administration.
+  \item Search Recovery Logs for the customer/recovery.
+  \item Check Pending Recoveries and relevant Shopify queues.
+  \item If jobs are failed or queue data is unavailable, capture queue/job evidence and continue with Grafana logs/traces.
+\end{enumerate}
+
+\section{Merchant reports a message or translation problem}
+\begin{enumerate}
+  \item Locate the merchant's support thread and recovery/conversation where relevant.
+  \item Compare original and translated support text.
+  \item For a failed support translation, use Retry/Reconcile if appropriate.
+  \item For a missing translation, request an additional supported language.
+  \item If the translation remains unavailable, capture the message/translation state and escalate with identifiers rather than repeatedly retrying without evidence.
+\end{enumerate}
+
+\section{Merchant reports incorrect billing/usage}
+\begin{enumerate}
+  \item Review the merchant's displayed subscription/billing state in Tenant Administration.
+  \item Ask the merchant to identify the billing period and the usage row(s) in question.
+  \item Use recovery/conversation evidence to correlate the usage event if possible.
+  \item Do not change billing catalog mappings to fix a single-merchant dispute.
+  \item Escalate catalog defects to a SUPER\_ADMIN with the Shopify plan/usage handles and affected merchant evidence.
+\end{enumerate}
+
+\section{Queue backlog or failures}
+\begin{enumerate}
+  \item Check the queue summary and worker-online state.
+  \item Identify whether the problem is isolated to one queue, status or shop.
+  \item Inspect representative failed jobs and attempts made.
+  \item Capture timestamps, failure reason and stack trace.
+  \item Correlate with Grafana logs/traces before escalating to engineering/infrastructure.
+\end{enumerate}
+
+\chapter{Known product/documentation gaps}
+
+This section exists so the training guide does not create fictional operating procedures while the product is still being completed.
+
+\begin{itemize}
+  \item The admin UI currently loads an English catalogue only, although merchant/support translation capabilities cover 20 languages.
+  \item Merchant onboarding completion is represented in durable settings and displayed by admin, but the reviewed merchant code does not contain a complete self-service action that sets onboarding completion to true. The production onboarding flow should be documented again once that lifecycle is finalised.
+  \item The queue monitor is deliberately read-only; operational retry/remediation procedures are not currently implemented in this admin UI.
+  \item Billing catalog mutations require SUPER\_ADMIN even though the catalog page itself can be viewed by protected administrators.
+  \item The product scope is still evolving; screenshots and procedures must be reviewed whenever admin routes or support workflows materially change.
+\end{itemize}
+
+\chapter{Training exercises}
+
+\section{Exercise 1 - Tenant investigation}
+Using a non-production test tenant:
+\begin{enumerate}
+  \item find the tenant by domain;
+  \item identify its shop status, recovery delay, plan and onboarding state;
+  \item open Recovery Logs and identify one customer/recovery;
+  \item describe the recovery using the Conversation, Cart Details and Lifecycle tabs.
+\end{enumerate}
+
+\section{Exercise 2 - Merchant support ownership}
+Using a test support thread:
+\begin{enumerate}
+  \item filter to Unassigned;
+  \item take ownership;
+  \item inspect the original message and any translation;
+  \item compose a compliant test reply;
+  \item release ownership when the exercise is complete.
+\end{enumerate}
+
+\section{Exercise 3 - Queue evidence collection}
+Using a development/test environment:
+\begin{enumerate}
+  \item open Shopify Queues;
+  \item select a queue;
+  \item filter jobs by status and shop;
+  \item open one job detail;
+  \item write an escalation summary containing queue, job ID, time, attempts and failure reason without copying unnecessary payload data.
+\end{enumerate}
+
+\appendix
+\chapter{Administrator screenshot IDs}
+
+The following screenshot IDs are referenced by this manual. Place localized files next to \ModaPath{admin-training-guide.tex} using \ModaPath{<id>.<locale>.png}, \ModaPath{.jpg} or \ModaPath{.pdf}.
+
+\begin{longtable}{P{0.40\linewidth}P{0.50\linewidth}}
+\toprule
+\textbf{Screenshot ID} & \textbf{Purpose}\\
+\midrule
+\endhead
+admin-login & Platform administrator sign-in\\
+admin-tenant-directory & Tenant directory overview\\
+admin-tenant-search & Tenant search/selection\\
+admin-tenant-administration & Tenant editable controls and billing/onboarding summary\\
+admin-recovery-logs-customers & Customer list within Recovery Logs\\
+admin-recovery-detail-conversation & Recovery conversation tab\\
+admin-recovery-detail-cart & Recovery cart details tab\\
+admin-recovery-detail-lifecycle & Recovery lifecycle tab\\
+admin-merchant-messages & Pending merchant-support threads\\
+admin-support-thread & Thread ownership/history/reply\\
+admin-support-translation & Support translation controls\\
+admin-billing-plans & Billing plan catalog\\
+admin-observability & Grafana navigation\\
+admin-shopify-queues & Queue summary\\
+admin-queue-details & Queue job list/filter panel\\
+admin-queue-job-details & Selected job diagnostics\\
+\bottomrule
+\end{longtable}

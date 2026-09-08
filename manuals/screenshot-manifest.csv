@@ -1,0 +1,28 @@
+manual,screenshot_id,purpose,filename_pattern
+admin,admin-login,Platform administrator sign-in,admin-login.<locale>.png
+admin,admin-tenant-directory,Tenant directory overview,admin-tenant-directory.<locale>.png
+admin,admin-tenant-search,Tenant search and selection,admin-tenant-search.<locale>.png
+admin,admin-tenant-administration,Tenant controls and billing/onboarding summary,admin-tenant-administration.<locale>.png
+admin,admin-recovery-logs-customers,Customer list in Recovery Logs,admin-recovery-logs-customers.<locale>.png
+admin,admin-recovery-detail-conversation,Recovery Conversation tab,admin-recovery-detail-conversation.<locale>.png
+admin,admin-recovery-detail-cart,Recovery Cart Details tab,admin-recovery-detail-cart.<locale>.png
+admin,admin-recovery-detail-lifecycle,Recovery Lifecycle tab,admin-recovery-detail-lifecycle.<locale>.png
+admin,admin-merchant-messages,Pending merchant support threads,admin-merchant-messages.<locale>.png
+admin,admin-support-thread,Support ownership history and reply,admin-support-thread.<locale>.png
+admin,admin-support-translation,Translation controls,admin-support-translation.<locale>.png
+admin,admin-billing-plans,Billing plan catalog,admin-billing-plans.<locale>.png
+admin,admin-observability,Grafana navigation,admin-observability.<locale>.png
+admin,admin-shopify-queues,Queue operational summary,admin-shopify-queues.<locale>.png
+admin,admin-queue-details,Queue details and job filters,admin-queue-details.<locale>.png
+admin,admin-queue-job-details,Selected job diagnostics,admin-queue-job-details.<locale>.png
+merchant,merchant-onboarding,Welcome and onboarding,merchant-onboarding.<locale>.png
+merchant,merchant-shopify-pricing,Shopify pricing plan selection,merchant-shopify-pricing.<locale>.png
+merchant,merchant-usage-overview,Current and past usage overview,merchant-usage-overview.<locale>.png
+merchant,merchant-pending-recoveries,Pending recoveries,merchant-pending-recoveries.<locale>.png
+merchant,merchant-performance-dashboard,Performance KPIs and recovery chart,merchant-performance-dashboard.<locale>.png
+merchant,merchant-recovery-customer-list,Customer recovery list,merchant-recovery-customer-list.<locale>.png
+merchant,merchant-recovery-detail,Customer interaction and recovery detail,merchant-recovery-detail.<locale>.png
+merchant,merchant-billable-usage,Detailed billable usage,merchant-billable-usage.<locale>.png
+merchant,merchant-messages,Merchant support thread,merchant-messages.<locale>.png
+merchant,merchant-messages-translation,Original and translated support message,merchant-messages-translation.<locale>.png
+merchant,merchant-billing,Current billing state,merchant-billing.<locale>.png

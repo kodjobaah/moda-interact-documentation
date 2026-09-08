@@ -1,0 +1,269 @@
+\chapter{About Moda Interact}
+
+Moda Interact is a Shopify application for abandoned-checkout recovery and merchant visibility into recovery activity, messages and billable usage. The application is embedded inside Shopify Admin.
+
+\ModaCurrentState{This manual describes the merchant-facing code reviewed on 8 September 2026. The product is still being finalised. The current merchant interface includes onboarding/plan entry, usage overview, pending recoveries, recovery performance detail, billable usage, merchant-support messages and billing state.}
+
+\section{Who should use this manual}
+This guide is for Shopify merchants and authorised store staff who need to:
+\begin{itemize}
+  \item open and navigate Moda Interact;
+  \item understand recovery and usage information;
+  \item review pending recoveries;
+  \item inspect recovered/engaged checkouts and message history;
+  \item contact Moda Support;
+  \item understand their current Moda billing state and change/view plans through Shopify.
+\end{itemize}
+
+\chapter{Languages and regional formatting}
+
+Moda Interact currently includes merchant UI catalogues for 20 languages. The application also uses the merchant/session locale and store time-zone information for localized numbers, dates, times and money formatting.
+
+\begin{longtable}{@{}P{0.15\linewidth}P{0.27\linewidth}P{0.15\linewidth}P{0.27\linewidth}@{}}
+\toprule
+\textbf{Code} & \textbf{Language} & \textbf{Code} & \textbf{Language}\\
+\midrule
+\endhead
+zh-Hans & Chinese (Simplified) & zh-Hant & Chinese (Traditional)\\
+cs & Czech & da & Danish\\
+nl & Dutch & en & English\\
+fi & Finnish & fr & French\\
+de & German & it & Italian\\
+ja & Japanese & ko & Korean\\
+nb & Norwegian Bokm\aa l & pl & Polish\\
+pt-BR & Portuguese (Brazil) & pt-PT & Portuguese (Portugal)\\
+es & Spanish & sv & Swedish\\
+th & Thai & tr & Turkish\\
+\bottomrule
+\end{longtable}
+
+\ModaNote{The manual itself uses the same locale codes for translated text and screenshots. For example, the French screenshot for the usage overview is named \ModaPath{merchant-usage-overview.fr.png}.}
+
+\chapter{Opening Moda Interact in Shopify}
+
+Open your Shopify store's Apps area and launch Moda Interact. The app runs as an embedded Shopify application. The current app navigation includes \ModaUI{Home} and \ModaUI{Messages}; other views are opened from links within the app.
+
+\chapter{Getting started and choosing a plan}
+
+\section{Welcome / onboarding screen}
+When the store has not completed Moda Interact onboarding, the Home route displays a welcome screen explaining abandoned-checkout recovery and a \ModaUI{Choose a plan} action.
+
+\ModaScreenshot{merchant-onboarding}{Merchant onboarding / Welcome to Moda Interact.}
+
+\section{Plan selection}
+The current billing flow uses Shopify's app pricing surface. If no billing contract exists, Moda Interact redirects the merchant to the Shopify pricing-plan page for the app.
+
+\ModaScreenshot{merchant-shopify-pricing}{Shopify pricing-plan selection for Moda Interact.}
+
+\ModaCurrentState{The reviewed code stores an onboarding-completed flag and checks it before showing the main merchant views, but the current merchant code does not contain a complete self-service action that marks onboarding as completed. This part of the production flow is still evolving and should be updated in the manual once finalised.}
+
+\chapter{Home: Usage Overview}
+
+After onboarding is complete and a subscription is available, Home defaults to the \ModaUI{Usage overview} screen.
+
+\section{Current and past usage}
+The page displays two usage breakdowns:
+\begin{itemize}
+  \item \ModaUI{Current usage};
+  \item \ModaUI{Past paid usage}.
+\end{itemize}
+
+Usage can be grouped into the following action types when present:
+\begin{itemize}
+  \item Checkout recovery;
+  \item Conversation;
+  \item Agent message;
+  \item WhatsApp message.
+\end{itemize}
+
+The current-usage card links to the current bill detail. The past-usage card lets you select a closed billing period.
+
+\ModaScreenshot{merchant-usage-overview}{Merchant usage overview showing current and past usage.}
+
+\chapter{Pending Recoveries}
+
+The Usage Overview page also includes a \ModaUI{Pending recoveries} section. This shows active recoveries that are scheduled, waiting or currently processing.
+
+The table currently includes:
+\begin{itemize}
+  \item last activity time;
+  \item scheduled recovery time;
+  \item status.
+\end{itemize}
+
+Use \ModaUI{Refresh} to request a fresh pending-recovery snapshot. The view shows the last successful update time when data is available and supports pagination.
+
+\ModaScreenshot{merchant-pending-recoveries}{Pending recoveries with status and refresh controls.}
+
+\ModaCurrentState{If pending-recovery data is temporarily unavailable, the page shows an unavailable message and allows another refresh. This does not, by itself, mean all recovery processing has stopped.}
+
+\chapter{Performance and recovery detail}
+
+From the usage overview, selecting a current or past bill detail opens the performance-oriented dashboard for that billing period.
+
+\section{Performance summary}
+The dashboard includes:
+\begin{itemize}
+  \item abandoned checkouts;
+  \item recovered checkouts;
+  \item recovery rate;
+  \item recovered revenue, grouped/formatted by currency where necessary;
+  \item messages sent.
+\end{itemize}
+
+\ModaScreenshot{merchant-performance-dashboard}{Performance dashboard and recovery breakdown.}
+
+\section{Recovery breakdown}
+The recovery chart groups recoveries by status, for example Recovered, Engaged, Message sent, Detected, Expired or Cancelled when those statuses exist in the data.
+
+Selecting a status filters the customer table. The table can show:
+\begin{itemize}
+  \item customer;
+  \item number of recoveries;
+  \item total cart value;
+  \item latest checkout date;
+  \item message count.
+\end{itemize}
+
+\ModaScreenshot{merchant-recovery-customer-list}{Customer/recovery list beneath the recovery breakdown.}
+
+\section{Customer interactions dialog}
+Selecting a customer opens a dialog. Choose an individual recovery to inspect:
+\begin{itemize}
+  \item recovery ID, status, value and detection date;
+  \item conversation type;
+  \item messages, sender, delivery status and time;
+  \item billable actions, quantities, idempotency keys and recorded dates.
+\end{itemize}
+
+\ModaScreenshot{merchant-recovery-detail}{Customer interaction dialog and selected recovery detail.}
+
+\chapter{Billable Usage}
+
+Select \ModaUI{View all usage for this bill} to open the detailed billable-usage table.
+
+The current table shows:
+\begin{itemize}
+  \item Action;
+  \item linked Recovery, when available;
+  \item Customer, when available;
+  \item Quantity;
+  \item Idempotency key;
+  \item Recorded date.
+\end{itemize}
+
+You can choose 10, 25, 50 or 100 rows per page. For past usage, you can select a closed billing period.
+
+\ModaScreenshot{merchant-billable-usage}{Detailed billable usage table.}
+
+\section{What an idempotency key means}
+An idempotency key is a technical identifier used by Moda Interact to make usage processing repeat-safe. It is primarily useful when discussing a specific usage line with Moda Support. Merchants do not need to edit or generate these identifiers.
+
+\chapter{Messages and Moda Support}
+
+Open \ModaUI{Messages} from the embedded app navigation to view your support thread. The navigation can show an unread-message count.
+
+\ModaScreenshot{merchant-messages}{Merchant support thread and compose form.}
+
+\section{Reading messages}
+The thread can include:
+\begin{itemize}
+  \item messages you sent;
+  \item administrative replies from Moda Support;
+  \item system messages.
+\end{itemize}
+
+Available administrative/system messages are marked read when viewed by the merchant application.
+
+\section{Translations}
+When a support response has a translation, the message can provide a \ModaUI{View original} / \ModaUI{View translation} control. If the translated text is still processing or failed, the UI shows a status message rather than pretending translated content is available.
+
+\ModaScreenshot{merchant-messages-translation}{Translated support message and original/translation toggle.}
+
+\ModaCurrentState{Some merchant-support labels and validation text in the reviewed implementation remain hard-coded in English even though the main merchant catalogue supports 20 languages. This is a product-localization gap, not a limitation of the manual format.}
+
+\section{Sending a support message}
+The compose box accepts 1 to 500 Unicode graphemes and shows a live character/grapheme count.
+
+When contacting support, include the minimum information needed to identify the issue, such as:
+\begin{itemize}
+  \item what you expected to happen;
+  \item what actually happened;
+  \item the approximate date/time;
+  \item the affected recovery or usage identifier if it is visible;
+  \item a screenshot where helpful.
+\end{itemize}
+
+\chapter{Billing}
+
+Open the Billing view when directed from onboarding or when you need to review your current subscription state.
+
+\ModaScreenshot{merchant-billing}{Merchant billing status view.}
+
+When the subscription can be safely mapped, the page can display:
+\begin{itemize}
+  \item current plan;
+  \item subscription status;
+  \item Free allowance remaining for a Free plan, or recovery-conversation usage for a paid plan;
+  \item current billing period;
+  \item trial end date, when applicable;
+  \item whether the subscription will end at the current period end;
+  \item a pending plan change and effective date, when applicable.
+\end{itemize}
+
+The \ModaUI{View plans} or \ModaUI{Change plan} action sends the merchant to Shopify's app pricing-plan surface.
+
+\ModaWarning{If the page says billing configuration is unavailable, contact Moda Support before relying on paid features. The current UI deliberately avoids projecting a potentially unsafe billing state when the subscription cannot be mapped confidently.}
+
+\chapter{Troubleshooting}
+
+\section{Pending recoveries says Unavailable}
+\begin{enumerate}
+  \item Use \ModaUI{Refresh} once.
+  \item If other app pages work, continue using the app and note the time of the unavailable status.
+  \item If the status persists and you are expecting a recovery, contact Moda Support with the approximate time and affected checkout/customer information you are permitted to share.
+\end{enumerate}
+
+\section{I cannot see recovery data}
+Check that you are viewing the expected billing period and, in the detailed dashboard, whether a status filter is active. If the recovery still cannot be found, contact support with the checkout/recovery context.
+
+\section{A support translation is not available}
+The message may show that translation is processing or unavailable. You can continue to view the original text when the UI offers the original/translation toggle. Contact support if the translated version remains unavailable.
+
+\section{Billing shows configuration unavailable}
+Do not assume a plan or usage level. Contact Moda Support so the subscription-to-plan mapping can be checked.
+
+\chapter{Current product gaps to be aware of}
+
+Because Moda Interact is still being finalised, this manual intentionally records current limitations:
+\begin{itemize}
+  \item onboarding completion is represented in the data model, but the reviewed merchant code does not yet contain the complete self-service action that finalises it;
+  \item some support-message UI strings remain English-only despite the 20 merchant catalogues;
+  \item the exact commercial plan set is controlled through Shopify's pricing surface and may change independently of this manual;
+  \item screenshots in each translated manual should be captured from the corresponding localized application/Shopify UI rather than reusing English screenshots.
+\end{itemize}
+
+\appendix
+\chapter{Merchant screenshot IDs}
+
+Place localized screenshot files beside \ModaPath{merchant-user-manual.tex}.\\
+Use the filename pattern \ModaPath{<id>.<locale>.png} (or the equivalent \ModaPath{.jpg}, \ModaPath{.jpeg} or \ModaPath{.pdf}).
+
+\begin{longtable}{P{0.40\linewidth}P{0.50\linewidth}}
+\toprule
+\textbf{Screenshot ID} & \textbf{Purpose}\\
+\midrule
+\endhead
+merchant-onboarding & Welcome/onboarding screen\\
+merchant-shopify-pricing & Shopify app pricing-plan surface\\
+merchant-usage-overview & Current/past usage overview\\
+merchant-pending-recoveries & Pending recoveries table\\
+merchant-performance-dashboard & Performance KPI dashboard and chart\\
+merchant-recovery-customer-list & Customer recovery list\\
+merchant-recovery-detail & Customer/recovery detail dialog\\
+merchant-billable-usage & Billable usage table\\
+merchant-messages & Merchant support thread and compose box\\
+merchant-messages-translation & Translation/original message toggle\\
+merchant-billing & Current billing status view\\
+\bottomrule
+\end{longtable}

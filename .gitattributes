@@ -1,0 +1,8 @@
+# Documentation screenshots are expected to grow to many locale variants.
+# Store them with Git LFS from the start.
+manuals/*.png filter=lfs diff=lfs merge=lfs -text
+manuals/*.jpg filter=lfs diff=lfs merge=lfs -text
+manuals/*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.jpeg filter=lfs diff=lfs merge=lfs -text

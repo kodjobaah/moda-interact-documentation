@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Local environment / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Playwright authenticated browser state - NEVER COMMIT
+playwright/.auth/
+
+# Playwright/runtime output
+playwright-report/
+test-results/
+artifacts/*
+!artifacts/.gitkeep
+
+# Generated manuals
+manuals/*.aux
+manuals/*.log
+manuals/*.out
+manuals/*.toc
+manuals/*.fls
+manuals/*.fdb_latexmk
+manuals/*.synctex.gz
+dist/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
