@@ -30,3 +30,7 @@ dist/
 .DS_Store
 .idea/
 .vscode/
+
+.youtube/
+youtube-access.json
+youtube-token.json
