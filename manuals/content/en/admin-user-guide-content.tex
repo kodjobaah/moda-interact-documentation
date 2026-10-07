@@ -1,0 +1,242 @@
+\chapter{About this guide}
+
+This guide explains the current Moda Interact administration application from an administrator's point of view. It is organised around the pages and workflows exposed by the application rather than around implementation repositories.
+
+\section{What this guide covers}
+The current administration navigation includes:
+\begin{itemize}
+  \item Tenant Directory;
+  \item Merchant Messages;
+  \item Billing Plans and the wider billing administration views;
+  \item Promotions for \ModaUI{SUPER\_ADMIN} users;
+  \item System Controls, including Platform Policy and Background Runtime;
+  \item Observability, including Shopify Queues and links to Grafana.
+\end{itemize}
+
+\ModaNote{The screenshots in this guide are documentation artifacts. Capture them from a seeded/test administration environment containing synthetic data. Do not publish screenshots containing real customer personal data, credentials, access tokens or other secrets.}
+
+\section{Role boundaries}
+The application distinguishes ordinary platform administrators from \ModaUI{SUPER\_ADMIN} users. Some views may be visible to both roles while higher-impact actions are restricted. Promotions is currently a \ModaUI{SUPER\_ADMIN}-only route.
+
+\ModaWarning{This guide describes how to reach and interpret administration functions. Before saving a control that changes merchant, billing, support or runtime state, verify that the action is appropriate for the incident or support request you are handling.}
+
+\chapter{Signing in and navigation}
+
+\section{Platform administrator sign-in}
+Open the administration application and use the Google sign-in flow. The application checks that the authenticated user is an authorised platform administrator before exposing protected pages.
+
+\ModaScreenshot{admin-login}{Platform administrator sign-in.}
+
+\section{Main navigation}
+After authentication, use the left navigation to move between tenant support, billing, platform controls and operational diagnostics. The role shown at the bottom of the navigation indicates the current administrator role.
+
+\ModaCurrentState{The reviewed administration application currently provides an English UI catalogue. The documentation source is multilingual, but translated UI screenshots should not be fabricated until the administration UI itself supports the corresponding locale.}
+
+\chapter{Tenant Directory}
+
+\section{Directory overview}
+The Tenant Directory is the default protected page. It combines platform-level summary cards with a paginated table of shops. Use it as the starting point when a support task is tied to a specific merchant.
+
+\ModaScreenshot{admin-tenant-directory}{Tenant Directory overview and platform summary.}
+
+\section{Finding a tenant}
+Use the search control at the top of the page to narrow the directory. Selecting a tenant expands its administration area directly beneath the selected row.
+
+\ModaScreenshot{admin-tenant-search}{Tenant search and selection controls.}
+
+\section{Tenant Overview}
+The \ModaUI{Overview} tab shows lifecycle status plus billing/onboarding summary information. Lifecycle changes are available behind an explicit control; the screenshot automation never submits this form.
+
+\ModaScreenshot{admin-tenant-administration}{Selected tenant Overview tab.}
+
+\section{Recovery Settings}
+The \ModaUI{Recovery Settings} tab shows the effective recovery policy, where that policy came from, the merchant-configured policy, any administrator override and Shopify discount catalogue status.
+
+\ModaScreenshot{admin-tenant-recovery-settings}{Tenant Recovery Settings and policy provenance.}
+
+The page can also expose actions for administrator overrides and discount catalogue synchronisation. Those actions change durable or asynchronous platform state and should be used only when the support procedure requires them.
+
+\section{Tenant Billing}
+The tenant-level \ModaUI{Billing} tab is distinct from the platform-wide Billing area. It shows the selected tenant's subscription, allowance, usage/Shopify information and billing activity, with controls according to the current administrator's permissions.
+
+\ModaScreenshot{admin-tenant-billing}{Tenant billing summary and tenant-scoped billing controls.}
+
+\chapter{Recovery Logs}
+
+\section{Customer and recovery history}
+Open a tenant and select \ModaUI{Recovery Logs}. The first level lists customers with recorded recovery activity. Selecting a customer shows that customer's recoveries.
+
+\ModaScreenshot{admin-recovery-logs-customers}{Customer list in the Recovery Logs tab.}
+
+\section{Recovery detail drawer}
+Selecting a recovery opens a read-only diagnostic drawer with three main views.
+
+\subsection{Conversation}
+The \ModaUI{Conversation} tab shows the recovery conversation and related message history.
+
+\ModaScreenshot{admin-recovery-detail-conversation}{Recovery Conversation tab.}
+
+\subsection{Cart Details}
+The \ModaUI{Cart Details} tab shows the recovery's cart/line-item context.
+
+\ModaScreenshot{admin-recovery-detail-cart}{Recovery Cart Details tab.}
+
+\subsection{Lifecycle}
+The \ModaUI{Lifecycle} tab shows the durable lifecycle history recorded for the recovery.
+
+\ModaScreenshot{admin-recovery-detail-lifecycle}{Recovery Lifecycle tab.}
+
+\ModaNote{Use recovery logs as evidence for a specific merchant/customer case. Queue state is operational evidence and is viewed separately under Observability.}
+
+\chapter{Merchant Messages}
+
+\section{Support inbox}
+The Merchant Messages page shows merchant support threads requiring attention. Select a thread to inspect its history and current ownership state.
+
+\ModaScreenshot{admin-merchant-messages}{Merchant support inbox.}
+
+\section{Thread ownership and replies}
+The selected thread view exposes ownership history and, where authorised, controls such as Take, Release, Reassign and administrative reply composition.
+
+\ModaScreenshot{admin-support-thread}{Selected merchant support thread.}
+
+\ModaCritical{Taking ownership, releasing/reassigning a thread, sending a message and requesting a translation are business mutations. The documentation capture workflow deliberately does not click these controls.}
+
+\section{Translations}
+Messages can display existing translations and provide controls for additional translation/reconciliation where supported. Use \ModaUI{View original} to return to the original text after inspecting a translated version.
+
+\ModaScreenshot{admin-support-translation}{Existing translation controls in a support thread.}
+
+\chapter{Billing administration}
+
+\section{Billing overview}
+The platform-wide Billing page is separate from tenant-level Billing. Its top-level tabs currently cover Overview, Plans, Recovery Packs, Refund Requests, App Events and Unmapped subscriptions.
+
+\ModaScreenshot{admin-billing-overview}{Platform billing overview.}
+
+\section{Pricing plans}
+Open \ModaUI{Plans} and the \ModaUI{Pricing plans} section to inspect the merchant pricing-plan catalogue. Plan creation, editing, activation/deactivation and other lifecycle controls should be treated as deliberate billing operations.
+
+\ModaScreenshot{admin-billing-plans}{Merchant pricing-plan catalogue.}
+
+\section{Feature catalogue}
+Within \ModaUI{Plans}, select \ModaUI{Features} to inspect the feature catalogue used by pricing plans.
+
+\ModaScreenshot{admin-billing-features}{Billing feature catalogue.}
+
+\section{Recovery Packs}
+The \ModaUI{Recovery Packs} view lists recovery-credit purchases and their recorded billing context.
+
+\ModaScreenshot{admin-billing-recovery-packs}{Recovery-credit purchase register.}
+
+\section{Refund Requests}
+The \ModaUI{Refund Requests} view shows recovery-credit refund requests and their settlement/provenance information. Settlement capability is permission-sensitive.
+
+\ModaScreenshot{admin-billing-refunds}{Recovery-credit refund requests.}
+
+\section{App Events}
+The \ModaUI{App Events} view provides the billing ledger/reporting events used for operational investigation.
+
+\ModaScreenshot{admin-billing-events}{Billing app-event ledger.}
+
+\section{Unmapped subscriptions}
+The \ModaUI{Unmapped} view is for Shopify subscriptions that cannot currently be mapped to the operational pricing catalogue. Use it as a reconciliation/support surface rather than silently inventing a local plan mapping.
+
+\ModaScreenshot{admin-billing-unmapped}{Unmapped Shopify subscription view.}
+
+\chapter{Promotions}
+
+\section{Promotion catalogue}
+The Promotions route is currently restricted to \ModaUI{SUPER\_ADMIN}. It lists promotion campaigns and provides catalogue filters and lifecycle actions.
+
+\ModaScreenshot{admin-promotions}{Promotion campaign catalogue.}
+
+\section{Creating a campaign}
+Selecting \ModaUI{New campaign} opens the campaign creation drawer. The documentation capture opens this drawer without submitting it.
+
+\ModaScreenshot{admin-promotion-create}{Promotion campaign creation drawer.}
+
+\ModaWarning{Campaign creation, editing, activation, deactivation and reactivation change merchant-facing commercial configuration. Confirm scope, target and lifecycle state before submitting changes.}
+
+\chapter{System Controls}
+
+\section{Platform Policy}
+The Platform Policy page exposes platform-wide billing/recovery policy values. These are not tenant-specific settings.
+
+\ModaScreenshot{admin-platform-policy}{Platform Policy controls.}
+
+\section{Background Runtime}
+The Background Runtime page exposes operational runtime configuration for background processing. The fields are grouped by runtime function and can affect worker behaviour and throughput.
+
+\ModaScreenshot{admin-background-runtime}{Background Runtime controls.}
+
+\ModaCritical{Platform Policy and Background Runtime are high-impact controls. Screenshot automation is read-only. Operational changes should be made only under an approved support, incident or configuration procedure.}
+
+\chapter{Observability}
+
+\section{Grafana navigation}
+The Observability page provides administration links into the configured Grafana destinations. Grafana authentication is separate from the Moda admin session.
+
+\ModaScreenshot{admin-observability}{Observability page and Grafana destinations.}
+
+\section{Shopify Queues}
+The Shopify Queues page is a read-only operational monitor for Redis/BullMQ queue state. Use it to understand queue counts, worker activity and recent jobs without turning the Admin application into a destructive queue-management console.
+
+\ModaScreenshot{admin-shopify-queues}{Shopify queue operational summary.}
+
+\section{Queue details}
+Selecting a queue opens a resizable detail drawer. The drawer provides queue summary data and job filtering/navigation.
+
+\ModaScreenshot{admin-queue-details}{Selected queue detail drawer.}
+
+\section{Job diagnostics}
+When jobs are available for the selected status, selecting a job opens diagnostic information such as job identity, timing, attempts, failure information and payload data.
+
+\ModaCurrentState{The job-detail drawer is conditional operational state. A queue may legitimately contain no jobs, so the documentation capture does not create or retry a job merely to obtain this screenshot. When a job is available, the screenshot is included automatically; otherwise this section remains valid without it.}
+
+\ModaOptionalScreenshot{admin-queue-job-details}{Selected queue job diagnostics.}
+
+\ModaWarning{Job payloads are operational evidence and may contain merchant/customer identifiers. Copy only the minimum evidence required for an approved support or incident record.}
+
+\chapter{A practical support workflow}
+
+A typical investigation can be performed without changing platform state:
+\begin{enumerate}
+  \item Find the merchant in the Tenant Directory.
+  \item Review the tenant Overview, Recovery Settings and Billing state.
+  \item Use Recovery Logs when the issue concerns a customer/recovery.
+  \item Use Merchant Messages when the merchant has opened a support conversation.
+  \item Use platform Billing when the issue concerns pricing configuration, purchases, refunds, app events or an unmapped subscription.
+  \item Use Shopify Queues when an asynchronous workflow may be delayed or failing.
+  \item Use Grafana when logs, traces or metrics are required beyond the built-in operational views.
+  \item Record the evidence before performing any authorised mutation.
+\end{enumerate}
+
+\section{Choosing evidence}
+\begin{longtable}{P{0.24\linewidth}P{0.66\linewidth}}
+\toprule
+\textbf{Question} & \textbf{Primary view}\\
+\midrule
+\endhead
+Which merchant and subscription state am I looking at? & Tenant Directory, Overview and tenant Billing.\\
+What recovery policy is effective and why? & Tenant Recovery Settings.\\
+What happened to a particular recovery? & Recovery Logs and the recovery detail drawer.\\
+What has the merchant told support? & Merchant Messages.\\
+What billing record or Shopify mapping is involved? & Platform Billing tabs.\\
+Is background processing delayed or failing? & Shopify Queues, then Grafana if deeper telemetry is required.\\
+\bottomrule
+\end{longtable}
+
+\chapter{Maintaining this guide}
+
+\section{Screenshot IDs are stable documentation contracts}
+The LaTeX source references screenshots by language-neutral ID. Localised assets use the filename pattern:
+
+\begin{center}
+\texttt{<screenshot-id>.<locale>.png}
+\end{center}
+
+The English capture script writes \texttt{.en.png} files. When another documentation locale is added, translate the content files and provide screenshots only when the corresponding application UI is genuinely available in that locale.
+
+\section{Generated output}
+The build script accepts a documentation language and output format. PDF is rendered from the localised LaTeX source with XeLaTeX. DOCX is generated from the same source through an HTML intermediate so the callouts, tables and screenshots are retained more reliably.

@@ -1,0 +1,47 @@
+{
+  "name": "@modainteract/moda-interact-documentation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Localized Moda Interact manuals and Playwright screenshot capture tooling.",
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "scripts": {
+    "capture:plan": "tsx automation/src/cli.ts plan",
+    "auth:shopify": "tsx automation/src/cli.ts auth-shopify",
+    "video:merchant:auth": "npm run auth:shopify",
+    "auth:admin": "tsx automation/src/cli.ts auth-admin",
+    "capture:merchant": "tsx automation/src/cli.ts capture-merchant",
+    "capture:admin": "tsx automation/src/cli.ts capture-admin",
+    "capture:locale": "tsx automation/src/cli.ts capture-locale",
+    "capture:all-locales": "tsx automation/src/cli.ts capture-all-locales",
+    "video:merchant:plan": "tsx automation/src/cli.ts video-merchant-plan",
+    "video:merchant:capture": "tsx automation/src/cli.ts video-merchant-capture",
+    "video:merchant:narrate": "tsx automation/src/cli.ts video-merchant-narrate",
+    "video:merchant:render": "tsx automation/src/cli.ts video-merchant-render",
+    "video:merchant:onboarding:plan": "tsx automation/src/cli.ts video-merchant-onboarding-plan",
+    "video:merchant:onboarding:capture": "tsx automation/src/cli.ts video-merchant-onboarding-capture",
+    "video:voiceover:setup": "bash scripts/setup-kokoro.sh",
+    "video:merchant:onboarding:narrate": "tsx automation/src/cli.ts video-merchant-onboarding-narrate",
+    "video:merchant:onboarding:render": "tsx automation/src/cli.ts video-merchant-onboarding-render",
+    "playwright:install": "playwright install chromium",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "validate": "npm run typecheck && npm test && npm run capture:plan",
+    "guide:admin:capture": "bash scripts/capture-admin-user-guide.sh",
+    "guide:build": "bash scripts/build-user-guide.sh"
+  },
+  "dependencies": {
+    "csv-parse": "^7.0.2",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0",
+    "@playwright/test": "^1.63.0"
+  }
+}

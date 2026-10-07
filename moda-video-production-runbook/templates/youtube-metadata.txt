@@ -1,0 +1,24 @@
+Title:
+Moda Interact for Shopify – AI-Powered Abandoned Checkout Recovery
+
+Description:
+See how Moda Interact helps Shopify merchants recover abandoned checkouts using AI-assisted WhatsApp conversations.
+
+This walkthrough covers:
+• Recovery overview and recovery history
+• AI/customer recovery conversations
+• Billing and recovery capacity
+• Usage history and purchased credits
+• Shopify-managed plan changes
+• Promotions
+• Recovery behaviour and follow-ups
+• Conversation features
+• Store profile
+• Merchant Knowledge
+
+Learn more about Moda Interact:
+https://www.modainteract.com/
+
+Audience: No, it is not made for kids
+Visibility: Public
+Captions: Upload moda-interact-shopify-demo.en.srt as English captions.

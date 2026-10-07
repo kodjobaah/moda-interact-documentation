@@ -16,8 +16,33 @@
 \RequirePackage{microtype}
 \RequirePackage{lastpage}
 
-\IfFontExistsTF{Noto Sans}{\setmainfont{Noto Sans}}{\setmainfont{DejaVu Sans}}
-\IfFontExistsTF{Noto Sans Mono}{\setmonofont{Noto Sans Mono}}{\setmonofont{DejaVu Sans Mono}}
+% Prefer TeX-distributed Noto font files when they are installed.  XeTeX on
+% macOS does not necessarily expose TeX Live fonts through the system font
+% database, so selecting only by family name can fail even when the font files
+% are present.  Latin Modern is the guaranteed TeX Live fallback for the
+% English guide and keeps PDF generation independent of system font casks.
+\IfFileExists{NotoSans-Regular.ttf}{%
+  \setmainfont{NotoSans-Regular.ttf}[%
+    BoldFont=NotoSans-Bold.ttf,%
+    ItalicFont=NotoSans-Italic.ttf,%
+    BoldItalicFont=NotoSans-BoldItalic.ttf%
+  ]%
+}{%
+  \setmainfont{lmsans10-regular.otf}[%
+    BoldFont=lmsans10-bold.otf,%
+    ItalicFont=lmsans10-oblique.otf,%
+    BoldItalicFont=lmsans10-boldoblique.otf%
+  ]%
+}
+\IfFileExists{NotoSansMono-Regular.ttf}{%
+  \setmonofont{NotoSansMono-Regular.ttf}[BoldFont=NotoSansMono-Bold.ttf]%
+}{%
+  \setmonofont{lmmono10-regular.otf}[%
+    BoldFont=lmmonolt10-bold.otf,%
+    ItalicFont=lmmono10-italic.otf,%
+    BoldItalicFont=lmmonolt10-boldoblique.otf%
+  ]%
+}
 
 \definecolor{ModaGreen}{HTML}{1F5D42}
 \definecolor{ModaLightGreen}{HTML}{EAF4EF}
@@ -119,6 +144,14 @@
   \caption{#2}
   \label{fig:#1}
   \end{figure}
+}
+
+\newcommand{\ModaOptionalScreenshot}[2]{%
+  \IfFileExists{#1.\ManualLocale.png}{\ModaScreenshot{#1}{#2}}{%
+  \IfFileExists{#1.\ManualLocale.jpg}{\ModaScreenshot{#1}{#2}}{%
+  \IfFileExists{#1.\ManualLocale.jpeg}{\ModaScreenshot{#1}{#2}}{%
+  \IfFileExists{#1.\ManualLocale.pdf}{\ModaScreenshot{#1}{#2}}{}%
+  }}}%
 }
 
 \newcommand{\ModaField}[2]{\textbf{#1}: #2}

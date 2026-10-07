@@ -1,28 +1,40 @@
-manual,screenshot_id,purpose,filename_pattern
-admin,admin-login,Platform administrator sign-in,admin-login.<locale>.png
-admin,admin-tenant-directory,Tenant directory overview,admin-tenant-directory.<locale>.png
-admin,admin-tenant-search,Tenant search and selection,admin-tenant-search.<locale>.png
-admin,admin-tenant-administration,Tenant controls and billing/onboarding summary,admin-tenant-administration.<locale>.png
-admin,admin-recovery-logs-customers,Customer list in Recovery Logs,admin-recovery-logs-customers.<locale>.png
-admin,admin-recovery-detail-conversation,Recovery Conversation tab,admin-recovery-detail-conversation.<locale>.png
-admin,admin-recovery-detail-cart,Recovery Cart Details tab,admin-recovery-detail-cart.<locale>.png
-admin,admin-recovery-detail-lifecycle,Recovery Lifecycle tab,admin-recovery-detail-lifecycle.<locale>.png
-admin,admin-merchant-messages,Pending merchant support threads,admin-merchant-messages.<locale>.png
-admin,admin-support-thread,Support ownership history and reply,admin-support-thread.<locale>.png
-admin,admin-support-translation,Translation controls,admin-support-translation.<locale>.png
-admin,admin-billing-plans,Billing plan catalog,admin-billing-plans.<locale>.png
-admin,admin-observability,Grafana navigation,admin-observability.<locale>.png
-admin,admin-shopify-queues,Queue operational summary,admin-shopify-queues.<locale>.png
-admin,admin-queue-details,Queue details and job filters,admin-queue-details.<locale>.png
-admin,admin-queue-job-details,Selected job diagnostics,admin-queue-job-details.<locale>.png
-merchant,merchant-onboarding,Welcome and onboarding,merchant-onboarding.<locale>.png
-merchant,merchant-shopify-pricing,Shopify pricing plan selection,merchant-shopify-pricing.<locale>.png
-merchant,merchant-usage-overview,Current and past usage overview,merchant-usage-overview.<locale>.png
-merchant,merchant-pending-recoveries,Pending recoveries,merchant-pending-recoveries.<locale>.png
-merchant,merchant-performance-dashboard,Performance KPIs and recovery chart,merchant-performance-dashboard.<locale>.png
-merchant,merchant-recovery-customer-list,Customer recovery list,merchant-recovery-customer-list.<locale>.png
-merchant,merchant-recovery-detail,Customer interaction and recovery detail,merchant-recovery-detail.<locale>.png
-merchant,merchant-billable-usage,Detailed billable usage,merchant-billable-usage.<locale>.png
-merchant,merchant-messages,Merchant support thread,merchant-messages.<locale>.png
-merchant,merchant-messages-translation,Original and translated support message,merchant-messages-translation.<locale>.png
-merchant,merchant-billing,Current billing state,merchant-billing.<locale>.png
+manual,screenshot_id,purpose,filename_pattern,requirement
+admin,admin-login,Platform administrator sign-in,admin-login.<locale>.png,required
+admin,admin-tenant-directory,Tenant directory overview,admin-tenant-directory.<locale>.png,required
+admin,admin-tenant-search,Tenant search and selection,admin-tenant-search.<locale>.png,required
+admin,admin-tenant-administration,Tenant Overview administration,admin-tenant-administration.<locale>.png,required
+admin,admin-tenant-recovery-settings,Tenant Recovery Settings and policy provenance,admin-tenant-recovery-settings.<locale>.png,required
+admin,admin-tenant-billing,Tenant billing summary and controls,admin-tenant-billing.<locale>.png,required
+admin,admin-recovery-logs-customers,Customer list in Recovery Logs,admin-recovery-logs-customers.<locale>.png,required
+admin,admin-recovery-detail-conversation,Recovery Conversation tab,admin-recovery-detail-conversation.<locale>.png,required
+admin,admin-recovery-detail-cart,Recovery Cart Details tab,admin-recovery-detail-cart.<locale>.png,required
+admin,admin-recovery-detail-lifecycle,Recovery Lifecycle tab,admin-recovery-detail-lifecycle.<locale>.png,required
+admin,admin-merchant-messages,Pending merchant support threads,admin-merchant-messages.<locale>.png,required
+admin,admin-support-thread,Merchant support thread and ownership controls,admin-support-thread.<locale>.png,required
+admin,admin-support-translation,Existing translation controls,admin-support-translation.<locale>.png,required
+admin,admin-billing-overview,Platform billing overview,admin-billing-overview.<locale>.png,required
+admin,admin-billing-plans,Merchant pricing plan catalogue,admin-billing-plans.<locale>.png,required
+admin,admin-billing-features,Billing feature catalogue,admin-billing-features.<locale>.png,required
+admin,admin-billing-recovery-packs,Recovery credit purchase register,admin-billing-recovery-packs.<locale>.png,required
+admin,admin-billing-refunds,Recovery credit refund requests,admin-billing-refunds.<locale>.png,required
+admin,admin-billing-events,Billing app events ledger,admin-billing-events.<locale>.png,required
+admin,admin-billing-unmapped,Unmapped Shopify subscriptions,admin-billing-unmapped.<locale>.png,required
+admin,admin-promotions,Promotion campaign catalogue,admin-promotions.<locale>.png,required
+admin,admin-promotion-create,Promotion campaign creation drawer,admin-promotion-create.<locale>.png,required
+admin,admin-platform-policy,Platform Policy controls,admin-platform-policy.<locale>.png,required
+admin,admin-background-runtime,Background Runtime controls,admin-background-runtime.<locale>.png,required
+admin,admin-observability,Grafana observability navigation,admin-observability.<locale>.png,required
+admin,admin-shopify-queues,Shopify queue operational summary,admin-shopify-queues.<locale>.png,required
+admin,admin-queue-details,Queue details and job filters,admin-queue-details.<locale>.png,required
+admin,admin-queue-job-details,Selected job diagnostics,admin-queue-job-details.<locale>.png,optional
+merchant,merchant-onboarding,Welcome and onboarding,merchant-onboarding.<locale>.png,required
+merchant,merchant-shopify-pricing,Shopify pricing plan selection,merchant-shopify-pricing.<locale>.png,required
+merchant,merchant-usage-overview,Current and past usage overview,merchant-usage-overview.<locale>.png,required
+merchant,merchant-pending-recoveries,Pending recoveries,merchant-pending-recoveries.<locale>.png,required
+merchant,merchant-performance-dashboard,Performance KPIs and recovery chart,merchant-performance-dashboard.<locale>.png,required
+merchant,merchant-recovery-customer-list,Customer recovery list,merchant-recovery-customer-list.<locale>.png,required
+merchant,merchant-recovery-detail,Customer interaction and recovery detail,merchant-recovery-detail.<locale>.png,required
+merchant,merchant-billable-usage,Detailed billable usage,merchant-billable-usage.<locale>.png,required
+merchant,merchant-messages,Merchant support thread,merchant-messages.<locale>.png,required
+merchant,merchant-messages-translation,Original and translated support message,merchant-messages-translation.<locale>.png,required
+merchant,merchant-billing,Current billing state,merchant-billing.<locale>.png,required

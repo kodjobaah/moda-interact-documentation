@@ -30,3 +30,24 @@ For every language release, check:
 - CJK/Thai glyphs render correctly with the build fonts;
 - screenshots do not expose real customer personal data;
 - all screenshot placeholders have been intentionally accepted or replaced.
+
+## Administrator User Guide
+
+The canonical administrator guide wrapper is `admin-user-guide.tex`. A translated guide requires:
+
+```text
+manuals/content/<locale>/admin-user-guide-metadata.tex
+manuals/content/<locale>/admin-user-guide-content.tex
+```
+
+Build it with:
+
+```bash
+./scripts/build-user-guide.sh --language <locale> --format pdf
+./scripts/build-user-guide.sh --language <locale> --format docx
+```
+
+The Admin application in the reviewed snapshot currently exposes only the English UI catalogue.
+Translated documentation prose can be prepared now, but localized Admin screenshots must represent
+real localized UI. Until that exists, use `--allow-missing-screenshots` for translation-review drafts
+instead of copying English screenshots into another locale.
