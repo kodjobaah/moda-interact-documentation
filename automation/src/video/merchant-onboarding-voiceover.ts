@@ -4,6 +4,15 @@ import { promisify } from 'node:util';
 import { execFile } from 'node:child_process';
 import type { DocumentationLocale } from '../locales.js';
 import { ARTIFACTS_DIR, REPOSITORY_ROOT } from '../paths.js';
+import {
+  VIDEO_FINAL_CRF,
+  VIDEO_FINAL_PRESET,
+  VIDEO_FINAL_TUNE,
+  VIDEO_OUTPUT_FPS,
+  VIDEO_OUTPUT_HEIGHT,
+  VIDEO_OUTPUT_WIDTH,
+  assertVideoQualityProfile,
+} from './video-quality.js';
 
 const execFileAsync = promisify(execFile);
 const KOKORO_TOOL_DIR = path.join(ARTIFACTS_DIR, 'video-tools', 'kokoro');
@@ -421,6 +430,7 @@ export async function renderMerchantOnboardingNarratedVideo(options: {
   locale: DocumentationLocale;
   overwrite: boolean;
 }): Promise<MerchantOnboardingVoiceoverPlan> {
+  assertVideoQualityProfile();
   const plan = await buildMerchantOnboardingVoiceoverPlan(options.locale);
   if (!(await fileExists(plan.narrationPath))) {
     throw new Error(
@@ -446,12 +456,20 @@ export async function renderMerchantOnboardingNarratedVideo(options: {
       '-i', plan.sourceVideo,
       '-i', plan.narrationPath,
       '-i', plan.subtitlesPath,
-      '-map', '0:v:0',
+      '-filter_complex',
+      `[0:v]scale=${VIDEO_OUTPUT_WIDTH}:${VIDEO_OUTPUT_HEIGHT}:flags=lanczos:force_original_aspect_ratio=decrease,` +
+        `pad=${VIDEO_OUTPUT_WIDTH}:${VIDEO_OUTPUT_HEIGHT}:(ow-iw)/2:(oh-ih)/2,` +
+        `fps=${VIDEO_OUTPUT_FPS},setsar=1,format=yuv420p,` +
+        'setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709[vout]',
+      '-map', '[vout]',
       '-map', '1:a:0',
       '-map', '2:0',
       '-c:v', 'libx264',
-      '-preset', 'medium',
-      '-crf', '18',
+      '-preset', VIDEO_FINAL_PRESET,
+      '-tune', VIDEO_FINAL_TUNE,
+      '-crf', String(VIDEO_FINAL_CRF),
+      '-profile:v', 'high',
+      '-level:v', '5.2',
       '-pix_fmt', 'yuv420p',
       '-c:a', 'aac',
       '-b:a', '192k',

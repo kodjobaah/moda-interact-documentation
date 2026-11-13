@@ -13,6 +13,16 @@ import {
   DEFAULT_KOKORO_SPEED,
   DEFAULT_KOKORO_VOICE,
 } from './merchant-onboarding-voiceover.js';
+import {
+  VIDEO_FINAL_CRF,
+  VIDEO_FINAL_PRESET,
+  VIDEO_FINAL_TUNE,
+  VIDEO_OUTPUT_FPS,
+  VIDEO_OUTPUT_HEIGHT,
+  VIDEO_OUTPUT_WIDTH,
+  assertVideoQualityProfile,
+  videoQualityReport,
+} from './video-quality.js';
 
 const execFileAsync = promisify(execFile);
 const KOKORO_TOOL_DIR = path.join(ARTIFACTS_DIR, 'video-tools', 'kokoro');
@@ -587,8 +597,10 @@ async function renderNarratedScene(scene: MerchantDemoGeneratedScene): Promise<v
   const { filters } = segmentFilter(scene.keepSegments, scene.sourceDurationSeconds);
   filters.push(
     `[vbase]tpad=stop_mode=clone:stop_duration=${extendSeconds.toFixed(3)},trim=duration=${scene.renderedDurationSeconds.toFixed(3)},` +
-      'scale=1920:1080:force_original_aspect_ratio=decrease,' +
-      'pad=1920:1080:(ow-iw)/2:(oh-ih)/2,fps=25,setsar=1,format=yuv420p[vout]',
+      `scale=${VIDEO_OUTPUT_WIDTH}:${VIDEO_OUTPUT_HEIGHT}:flags=lanczos:force_original_aspect_ratio=decrease,` +
+      `pad=${VIDEO_OUTPUT_WIDTH}:${VIDEO_OUTPUT_HEIGHT}:(ow-iw)/2:(oh-ih)/2,` +
+      `fps=${VIDEO_OUTPUT_FPS},setsar=1,format=yuv420p,` +
+      'setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709[vout]',
   );
   filters.push(
     `[1:a]apad=pad_dur=${scene.renderedDurationSeconds.toFixed(3)},atrim=duration=${scene.renderedDurationSeconds.toFixed(3)},aresample=48000,asetpts=PTS-STARTPTS[aout]`,
@@ -602,8 +614,11 @@ async function renderNarratedScene(scene: MerchantDemoGeneratedScene): Promise<v
     '-map', '[vout]',
     '-map', '[aout]',
     '-c:v', 'libx264',
-    '-preset', 'medium',
-    '-crf', '18',
+    '-preset', VIDEO_FINAL_PRESET,
+    '-tune', VIDEO_FINAL_TUNE,
+    '-crf', String(VIDEO_FINAL_CRF),
+    '-profile:v', 'high',
+    '-level:v', '5.2',
     '-pix_fmt', 'yuv420p',
     '-c:a', 'aac',
     '-b:a', '192k',
@@ -633,6 +648,7 @@ export async function renderMerchantDemoNarratedVideo(options: {
   locale: DocumentationLocale;
   overwrite: boolean;
 }): Promise<{ finalVideoPath: string; subtitlesPath: string; renderReportPath: string }> {
+  assertVideoQualityProfile();
   const report = await readVoiceoverReport(options.locale);
   await assertSourcesUnchanged(report);
   const outputPath = report.finalVideoPath;
@@ -694,6 +710,7 @@ export async function renderMerchantDemoNarratedVideo(options: {
         renderedAt: new Date().toISOString(),
         finalVideoPath: outputPath,
         subtitlesPath: report.subtitlesPath,
+        quality: videoQualityReport(),
         totalDurationSeconds: report.scenes.reduce(
           (sum, scene) => sum + scene.renderedDurationSeconds,
           0,

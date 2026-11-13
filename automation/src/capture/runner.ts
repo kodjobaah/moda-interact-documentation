@@ -44,25 +44,28 @@ function locatorFor(
   return frame ? frame.locator(selector) : page.locator(selector);
 }
 
-async function runAction(
+export async function runAction(
   page: Page,
   frame: FrameLocator | undefined,
   action: CaptureAction,
 ): Promise<void> {
   const baseLocator = locatorFor(page, frame, action.locator);
   const locator = action.first ? baseLocator.first() : baseLocator;
+  const timeoutOptions: { timeout?: number } = action.timeoutMs === undefined
+    ? {}
+    : { timeout: action.timeoutMs };
   switch (action.type) {
     case "click":
-      await locator.click({ timeout: action.timeoutMs });
+      await locator.click(timeoutOptions);
       return;
     case "waitFor":
-      await locator.waitFor({ state: "visible", timeout: action.timeoutMs });
+      await locator.waitFor({ state: "visible", ...timeoutOptions });
       return;
     case "scrollIntoView":
-      await locator.scrollIntoViewIfNeeded({ timeout: action.timeoutMs });
+      await locator.scrollIntoViewIfNeeded(timeoutOptions);
       return;
     case "selectOption":
-      await locator.selectOption(action.value, { timeout: action.timeoutMs });
+      await locator.selectOption(action.value, timeoutOptions);
       return;
   }
 }

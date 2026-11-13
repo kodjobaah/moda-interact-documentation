@@ -1,0 +1,41 @@
+{
+  "id": "moda-interact-shopify-onboarding-free-plan",
+  "locale": "en",
+  "workingTitle": "Getting started with Moda Interact: onboarding and the Free plan",
+  "audience": "New Shopify merchants installing Moda Interact for the first time",
+  "targetDuration": "70-100 seconds after narration and final composition",
+  "fixture": "Fresh synthetic development shop: shop ACTIVE, onboarding incomplete, and no existing Shopify plan selection evidence.",
+  "mutationWarning": "This is a one-shot capture flow. It persists the selected Store Category and item types, then selects the Shopify-hosted Free plan. Run it only on a fresh disposable development store.",
+  "chapters": [
+    {
+      "id": "welcome",
+      "title": "Welcome to Moda Interact",
+      "narrationDraft": "When Moda Interact is opened for the first time, the onboarding screen explains how AI-assisted WhatsApp recovery works and shows the plans available for the store."
+    },
+    {
+      "id": "store-category",
+      "title": "Store category",
+      "narrationDraft": "Before choosing a plan, the merchant confirms the broad Store Category that best describes the business. This gives Moda Interact the starting context for the store."
+    },
+    {
+      "id": "item-types",
+      "title": "Types of items sold",
+      "narrationDraft": "The category can then be refined using the item-type checkboxes underneath it. Select the types that match what the store actually sells so Moda Interact can tailor the assistant context more precisely."
+    },
+    {
+      "id": "pricing-preview",
+      "title": "Plans and pricing",
+      "narrationDraft": "The onboarding page previews the available Moda Interact plans, including the recovery capacity provided by each option. Plan selection itself is securely managed by Shopify."
+    },
+    {
+      "id": "shopify-free-plan",
+      "title": "Select the Free plan in Shopify",
+      "narrationDraft": "Selecting View plans in Shopify opens Shopify's hosted app-pricing page. This recording uses a Shopify development store, so Shopify labels the actions Test with this plan and may show test pricing. On a live store, Shopify displays the real price for paid plans. For this walkthrough, we choose Free."
+    },
+    {
+      "id": "activation",
+      "title": "Approve the Free plan and finish setup",
+      "narrationDraft": "Shopify then shows the plan approval screen. For the Free plan there is no recurring subscription charge. After approval, Moda Interact reconciles Shopify's subscription with the internal plan mapping and only treats onboarding as complete when the Free recovery allowance is available on the Recovery overview."
+    }
+  ]
+}

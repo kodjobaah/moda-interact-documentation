@@ -1,0 +1,199 @@
+{
+  "id": "moda-interact-shopify-merchant-demo",
+  "locale": "en",
+  "voice": "bf_emma",
+  "language": "en-gb",
+  "speed": 1.08,
+  "tailSeconds": 0.8,
+  "scenes": [
+    {
+      "id": "shopify-launch",
+      "keepSegments": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 3.75
+        },
+        {
+          "startSeconds": 5.65,
+          "endSeconds": null
+        }
+      ],
+      "cues": [
+        {
+          "id": "launch",
+          "startSeconds": 0.6,
+          "text": "Moda Interact runs inside Shopify Admin, giving merchants one place to monitor and configure AI-assisted abandoned-checkout recovery."
+        }
+      ]
+    },
+    {
+      "id": "overview",
+      "cues": [
+        {
+          "id": "overview",
+          "startSeconds": 0.6,
+          "text": "The Recovery overview combines performance, recent outcomes, available recovery capacity and pending activity, so you can see what is happening without leaving Shopify."
+        }
+      ]
+    },
+    {
+      "id": "recoveries",
+      "cues": [
+        {
+          "id": "recoveries",
+          "startSeconds": 0.5,
+          "text": "Recoveries provides a searchable history of recovery attempts, including status, checkout value and the customer associated with each recovery."
+        }
+      ]
+    },
+    {
+      "id": "recovery-detail",
+      "cues": [
+        {
+          "id": "recovery-detail",
+          "startSeconds": 0.6,
+          "text": "Open a recovery to see the full read-only history: the AI message, the shopper's reply, the assistant response, delivery state and the milestones that led to the final outcome."
+        }
+      ]
+    },
+    {
+      "id": "billing",
+      "cues": [
+        {
+          "id": "billing",
+          "startSeconds": 0.5,
+          "text": "Billing and recovery capacity shows your current plan, included allowance, purchased credits and one-time top-up options without replacing or resetting the subscription allowance."
+        }
+      ]
+    },
+    {
+      "id": "billing-usage-history",
+      "cues": [
+        {
+          "id": "usage-history",
+          "startSeconds": 0.6,
+          "text": "Usage history shows recovery actions recorded against the billing period. Each linked row can be opened to trace that usage back to the underlying recovery and conversation."
+        }
+      ]
+    },
+    {
+      "id": "billing-purchased-credits",
+      "cues": [
+        {
+          "id": "purchased-credits",
+          "startSeconds": 0.6,
+          "text": "Purchased credit history shows each credit lot, how many credits remain, and which unused purchases are still eligible for refund within the current Shopify billing cycle."
+        }
+      ]
+    },
+    {
+      "id": "billing-change-plan",
+      "keepSegments": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 7.65
+        },
+        {
+          "startSeconds": 10.75,
+          "endSeconds": 13.8
+        },
+        {
+          "startSeconds": 15.75,
+          "endSeconds": null
+        }
+      ],
+      "cues": [
+        {
+          "id": "change-plan",
+          "startSeconds": 0.5,
+          "text": "Plan changes are managed securely by Shopify. Moda Interact shows your current plan, then opens Shopify's hosted plan selector, where you can review the available options before returning to the app."
+        }
+      ]
+    },
+    {
+      "id": "promotions",
+      "cues": [
+        {
+          "id": "promotion-offers",
+          "startSeconds": 0.6,
+          "text": "Promotions shows the offer currently selected for your store, its remaining recovery credits and other eligible promotions."
+        },
+        {
+          "id": "promotion-history",
+          "startSeconds": 8.5,
+          "text": "Expand Promotion history to review credits granted and used, expiry dates and earlier states such as selected, exhausted, closed or reopened."
+        }
+      ]
+    },
+    {
+      "id": "recovery-settings",
+      "cues": [
+        {
+          "id": "recovery-offer",
+          "startSeconds": 0.6,
+          "text": "Recovery offer lets you use no discount, a specific Shopify discount, or let Moda AI choose the best applicable discount from your available Shopify discounts."
+        },
+        {
+          "id": "recovery-start",
+          "startSeconds": 10.8,
+          "text": "Recovery start controls how long a checkout stays inactive before Moda begins recovery. Here it is thirty minutes."
+        },
+        {
+          "id": "follow-up",
+          "startSeconds": 18.7,
+          "text": "You can also schedule one no-response follow-up. A shopper reply continues the same conversation without another credit, while a scheduled proactive follow-up uses another recovery credit."
+        }
+      ]
+    },
+    {
+      "id": "features",
+      "cues": [
+        {
+          "id": "conversation-features",
+          "startSeconds": 0.5,
+          "text": "AI Conversations and Checkout Recovery are always enabled. Optional Product Search adds live Shopify catalogue information, Merchant Knowledge adds merchant-managed context, and Order Support can answer order-related questions."
+        }
+      ]
+    },
+    {
+      "id": "store-profile",
+      "cues": [
+        {
+          "id": "store-profile",
+          "startSeconds": 0.6,
+          "text": "Store Profile classifies the business and its item types, helping the assistant adapt its context to the kind of store it represents."
+        }
+      ]
+    },
+    {
+      "id": "merchant-knowledge",
+      "cues": [
+        {
+          "id": "knowledge-intro",
+          "startSeconds": 0.6,
+          "text": "Merchant Knowledge gives the assistant store-specific reference material. Your plan determines how many sources and how much content you can configure."
+        },
+        {
+          "id": "knowledge-web",
+          "startSeconds": 9.7,
+          "text": "Web sources can be classified as company information, support, policies, FAQs, product information, shipping or pricing, so the assistant can use the right context for each question."
+        },
+        {
+          "id": "knowledge-files",
+          "startSeconds": 21.2,
+          "text": "Structured product or pricing data can also be supplied from CSV or Excel files."
+        }
+      ]
+    },
+    {
+      "id": "closing",
+      "cues": [
+        {
+          "id": "closing",
+          "startSeconds": 0.4,
+          "text": "Moda Interact brings recovery activity, billing evidence and configurable AI context together inside Shopify, while Shopify continues to manage the merchant's commerce and subscription billing."
+        }
+      ]
+    }
+  ]
+}

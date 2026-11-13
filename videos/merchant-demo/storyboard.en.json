@@ -1,0 +1,102 @@
+{
+  "id": "moda-interact-shopify-merchant-demo",
+  "locale": "en",
+  "workingTitle": "How Moda Interact works inside Shopify",
+  "audience": "Shopify merchants evaluating or learning Moda Interact",
+  "targetDuration": "6-8 minutes after narration and final composition",
+  "fixture": "Synthetic ACTIVE development shop: shop ACTIVE, onboarding complete, subscription ACTIVE or TRIALING, known @example.invalid recovery fixture, demo discounts, promotions, purchased credits and Merchant Knowledge configured.",
+  "safety": "Use only a synthetic development store. Read-only navigation and reviewed local-only form demonstrations are allowed. Do not purchase, refund, submit, save, send, select a promotion, change a plan, toggle auto-saving conversation features, upload, delete, refresh/reprocess knowledge, or otherwise persist merchant/provider state during capture.",
+  "scenes": [
+    {
+      "id": "shopify-launch",
+      "title": "Launch Moda Interact",
+      "capture": "enabled",
+      "narrationDraft": "Moda Interact works inside Shopify Admin, giving merchants one place to monitor and configure AI-assisted abandoned-checkout recovery."
+    },
+    {
+      "id": "overview",
+      "title": "Recovery overview",
+      "capture": "enabled",
+      "narrationDraft": "The Recovery overview combines recovery performance, recent outcomes, current recovery capacity and pending activity so merchants can see what is happening without leaving Shopify."
+    },
+    {
+      "id": "recoveries",
+      "title": "Recovery history",
+      "capture": "enabled",
+      "narrationDraft": "Recoveries provides a searchable history of recovery attempts, with date, customer and status filters plus the latest result and checkout value for each recovery."
+    },
+    {
+      "id": "recovery-detail",
+      "title": "Recovery detail and AI conversation",
+      "capture": "enabled",
+      "narrationDraft": "Selecting a recovery opens its read-only history. Merchants can review the AI recovery message, the shopper's reply, the assistant response, delivery state, milestones and related recoveries to understand how the checkout progressed."
+    },
+    {
+      "id": "billing",
+      "title": "Billing and recovery capacity",
+      "capture": "enabled",
+      "narrationDraft": "Billing and recovery capacity shows the current plan, included recovery allowance, promotional and purchased credits, one-time top-up packs and the controls used to manage plan capacity."
+    },
+    {
+      "id": "billing-usage-history",
+      "title": "Usage history and linked recovery evidence",
+      "capture": "enabled",
+      "narrationDraft": "Usage history shows the recovery actions recorded against a billing period. A linked usage row can be traced back to the underlying recovery and conversation, giving the merchant an auditable connection between recorded usage and recovery activity."
+    },
+    {
+      "id": "billing-purchased-credits",
+      "title": "Purchased credit history",
+      "capture": "enabled",
+      "narrationDraft": "Purchased credit history shows each credit lot, its original and remaining credits, credits reserved by work in progress and the amount available now. Refund eligibility follows the current Shopify billing context; this demo does not submit a refund."
+    },
+    {
+      "id": "billing-change-plan",
+      "title": "Change plan through Shopify",
+      "capture": "enabled",
+      "narrationDraft": "Plan changes remain controlled by Shopify. Moda Interact shows the current plan, then hands the merchant to Shopify's hosted plan-selection screen. The demo shows available plans without selecting one and returns through the Moda Interact entry in Shopify."
+    },
+    {
+      "id": "promotions",
+      "title": "Promotions and promotion history",
+      "capture": "enabled",
+      "narrationDraft": "Promotions shows the currently selected promotion, remaining promotional recovery credits and other eligible offers. Expanding Promotion history reveals granted, used and remaining credits together with historical states such as selected, used, exhausted, closed, expired or reopened."
+    },
+    {
+      "id": "recovery-settings",
+      "title": "Recovery behaviour",
+      "capture": "enabled",
+      "narrationDraft": "Recovery behaviour controls the offer policy, when recovery starts after checkout inactivity and whether to send one no-response follow-up. The demo shows local unsaved examples only. Continuing a shopper reply uses the same conversation, while a scheduled proactive follow-up is a new recovery attempt and consumes another recovery credit."
+    },
+    {
+      "id": "features",
+      "title": "Conversation features",
+      "capture": "enabled",
+      "narrationDraft": "Conversation Features defines what the AI assistant can use. AI Conversations and Checkout Recovery are core capabilities. Optional Product Search can use live Shopify catalogue information, Merchant Knowledge can add merchant-managed context, and Order Support can support order-related conversations when enabled."
+    },
+    {
+      "id": "store-profile",
+      "title": "Store profile and assistant context",
+      "capture": "enabled",
+      "narrationDraft": "Store Profile classifies the merchant's business and selected item types. This context helps tailor the assistant to the kind of store it represents without changing the persisted profile during the recording."
+    },
+    {
+      "id": "merchant-knowledge",
+      "title": "Merchant Knowledge sources",
+      "capture": "enabled",
+      "narrationDraft": "Merchant Knowledge gives the AI store-specific reference material. Merchants can add web pages classified as company information, support, policies, FAQs, product information, shipping, pricing and other supported purposes, or provide structured product and pricing data through CSV or Excel uploads. Available source slots and content allowances depend on the merchant's plan."
+    },
+    {
+      "id": "support",
+      "title": "Merchant support",
+      "capture": "deferred",
+      "narrationDraft": "Merchants can contact Moda Support directly from the application and review the durable support conversation in one place.",
+      "deferredReason": "The current support page can automatically mark unread administrative messages as read. Automated capture is deferred until the demo can preserve the VIDEO-001 read-only contract."
+    },
+    {
+      "id": "closing",
+      "title": "Closing",
+      "capture": "enabled",
+      "narrationDraft": "Moda Interact keeps recovery activity, billing evidence and merchant-controlled AI context together inside Shopify, while Shopify remains responsible for the merchant's commerce and subscription billing experience."
+    }
+  ]
+}

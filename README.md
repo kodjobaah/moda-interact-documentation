@@ -70,7 +70,7 @@ embedded screenshots more reliably.
 
 ## Merchant YouTube demo — VIDEO-001 capture foundation
 
-VIDEO-001 records deterministic **English, read-only** merchant demo scenes at 1920×1080. Raw Playwright recordings are trimmed with FFmpeg to remove page-loading lead-in/lead-out. VIDEO-002 supplies local Kokoro narration for onboarding, and VIDEO-003 supplies narration, subtitles and final multi-scene composition for the main merchant walkthrough. VIDEO-001 uses browser-native smooth scrolling between relevant page sections so the recording shows the merchant moving through the interface instead of jumping instantly between targets.
+VIDEO-001 records deterministic **English, read-only** merchant demo scenes with the native-4K UI profile: a 1600×900 CSS viewport rendered at DPR 2.4, with a matching Chromium compositor scale, into a 3840×2160 video surface. This intentionally makes application text larger in-frame while preserving true 4K raster detail before YouTube transcodes it. Raw Playwright recordings are trimmed with FFmpeg using high-quality VP9 (CRF 8) to remove page-loading lead-in/lead-out without the former CRF-32 text-softening step. VIDEO-002 supplies local Kokoro narration for onboarding, and VIDEO-003 supplies narration, subtitles and final multi-scene composition for the main merchant walkthrough. VIDEO-001 uses browser-native smooth scrolling between relevant page sections so the recording shows the merchant moving through the interface instead of jumping instantly between targets.
 
 Local prerequisites:
 
@@ -198,7 +198,7 @@ Upload the `.srt` separately to YouTube even though the MP4 also contains a subt
 
 ## Merchant YouTube demo — VIDEO-003 main walkthrough narration and final render
 
-VIDEO-003 turns the validated ACTIVE-store scene captures into the final merchant walkthrough. It reuses the local Kokoro setup from VIDEO-002, generates scene-specific narration and YouTube captions, removes the reviewed internal Shopify loading gaps from the launch and hosted-plan scenes, extends a scene with a still-frame hold when narration needs more time, and assembles the enabled scenes into one 1920×1080 H.264/AAC MP4.
+VIDEO-003 turns the validated ACTIVE-store scene captures into the final merchant walkthrough. It reuses the local Kokoro setup from VIDEO-002, generates scene-specific narration and YouTube captions, removes the reviewed internal Shopify loading gaps from the launch and hosted-plan scenes, extends a scene with a still-frame hold when narration needs more time, and assembles the enabled scenes directly into a native **3840×2160** H.264/AAC YouTube master. Scene rendering uses Lanczos scaling only as a guard, x264 `slow`/CRF 12 with the animation tune, and BT.709 metadata; it does not create a lossy 1080p master and then upscale it.
 
 The checked-in English narration timeline is:
 

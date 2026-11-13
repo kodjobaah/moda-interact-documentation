@@ -18,9 +18,21 @@ import {
 } from '../../config/merchant-video-scenes.js';
 import type { DocumentationLocale } from '../locales.js';
 import { ARTIFACTS_DIR, resolveRepositoryPath } from '../paths.js';
+import {
+  VIDEO_CAPTURE_CSS_HEIGHT,
+  VIDEO_CAPTURE_CSS_WIDTH,
+  VIDEO_CAPTURE_DEVICE_SCALE_FACTOR,
+  VIDEO_CAPTURE_CHROMIUM_ARGS,
+  VIDEO_INTERMEDIATE_CPU_USED,
+  VIDEO_INTERMEDIATE_CRF,
+  VIDEO_OUTPUT_HEIGHT,
+  VIDEO_OUTPUT_WIDTH,
+  assertVideoQualityProfile,
+  videoQualityReport,
+} from './video-quality.js';
 
-export const VIDEO_WIDTH = 1920;
-export const VIDEO_HEIGHT = 1080;
+export const VIDEO_WIDTH = VIDEO_OUTPUT_WIDTH;
+export const VIDEO_HEIGHT = VIDEO_OUTPUT_HEIGHT;
 const READY_TIMEOUT_MS = 30_000;
 const APP_FRAME_TIMEOUT_MS = 45_000;
 const APP_LAUNCH_FALLBACK_TIMEOUT_MS = 12_000;
@@ -419,10 +431,11 @@ export async function trimRecordedWebm(
       '-t', window.durationSeconds.toFixed(3),
       '-an',
       '-c:v', 'libvpx-vp9',
-      '-crf', '32',
+      '-crf', String(VIDEO_INTERMEDIATE_CRF),
       '-b:v', '0',
       '-deadline', 'good',
-      '-cpu-used', '4',
+      '-cpu-used', String(VIDEO_INTERMEDIATE_CPU_USED),
+      '-row-mt', '1',
       outputPath,
     ]);
   } catch (error) {
@@ -1007,14 +1020,18 @@ async function captureScene(
   const browser = await chromium.launch({
     headless: !request.headed,
     args: [
+      ...VIDEO_CAPTURE_CHROMIUM_ARGS,
       '--disable-blink-features=AutomationControlled',
       '--disable-features=WebAuthentication,WebAuthenticationCustomUI',
     ],
   });
   const context = await browser.newContext({
     storageState,
-    viewport: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
-    deviceScaleFactor: 1,
+    viewport: {
+      width: VIDEO_CAPTURE_CSS_WIDTH,
+      height: VIDEO_CAPTURE_CSS_HEIGHT,
+    },
+    deviceScaleFactor: VIDEO_CAPTURE_DEVICE_SCALE_FACTOR,
     reducedMotion: 'no-preference',
     locale: browserLocale(request.locale),
     recordVideo: {
@@ -1072,6 +1089,7 @@ async function captureScene(
 export async function captureMerchantDemo(
   request: MerchantVideoCaptureRequest,
 ): Promise<MerchantVideoCaptureResult[]> {
+  assertVideoQualityProfile();
   if (request.locale !== 'en') {
     throw new Error(
       `VIDEO-001 captures English only. Requested locale '${request.locale}' is not supported yet.`,
@@ -1106,7 +1124,7 @@ export async function captureMerchantDemo(
       {
         generatedAt: new Date().toISOString(),
         locale: request.locale,
-        viewport: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
+        quality: videoQualityReport(),
         results,
       },
       null,

@@ -19,6 +19,13 @@ import {
   trimRecordedWebm,
   type MerchantContent,
 } from './merchant-demo.js';
+import {
+  VIDEO_CAPTURE_CSS_HEIGHT,
+  VIDEO_CAPTURE_CSS_WIDTH,
+  VIDEO_CAPTURE_DEVICE_SCALE_FACTOR,
+  VIDEO_CAPTURE_CHROMIUM_ARGS,
+  assertVideoQualityProfile,
+} from './video-quality.js';
 
 const READY_TIMEOUT_MS = 45_000;
 const PRICING_TIMEOUT_MS = 60_000;
@@ -399,6 +406,7 @@ async function waitForActivatedOverview(page: Page, planName: string): Promise<v
 export async function captureMerchantOnboarding(
   request: MerchantOnboardingCaptureRequest,
 ): Promise<{ outputPath: string; reportPath: string }> {
+  assertVideoQualityProfile();
   if (request.locale !== 'en') {
     throw new Error(
       `The onboarding video currently supports English only. Requested '${request.locale}'.`,
@@ -431,14 +439,18 @@ export async function captureMerchantOnboarding(
   const browser = await chromium.launch({
     headless: !request.headed,
     args: [
+      ...VIDEO_CAPTURE_CHROMIUM_ARGS,
       '--disable-blink-features=AutomationControlled',
       '--disable-features=WebAuthentication,WebAuthenticationCustomUI',
     ],
   });
   const context = await browser.newContext({
     storageState,
-    viewport: { width: VIDEO_WIDTH, height: VIDEO_HEIGHT },
-    deviceScaleFactor: 1,
+    viewport: {
+      width: VIDEO_CAPTURE_CSS_WIDTH,
+      height: VIDEO_CAPTURE_CSS_HEIGHT,
+    },
+    deviceScaleFactor: VIDEO_CAPTURE_DEVICE_SCALE_FACTOR,
     reducedMotion: 'no-preference',
     locale: request.locale,
     recordVideo: {
