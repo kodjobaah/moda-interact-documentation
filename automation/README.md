@@ -51,7 +51,7 @@ Commands:
 
 - `video:merchant:auth` — reuse the existing interactive Shopify auth bootstrap.
 - `video:merchant:plan` — print scene order, capture/deferred state, output paths, and required local configuration.
-- `video:merchant:capture` — record all safe English scenes or one `--scene` at 1920×1080 and trim loading lead-in/lead-out with FFmpeg.
+- `video:merchant:capture` — record all safe English scenes or one `--scene` with the native-4K UI profile (1600×900 CSS viewport at DPR 2.4 → 3840×2160 pixels) and trim loading lead-in/lead-out with high-quality VP9/CRF 8.
 - `video:merchant:onboarding:plan` — describe the one-shot fresh-store onboarding/Free-plan recording.
 - `video:merchant:onboarding:capture` — record onboarding only when `--confirm-mutation` is supplied.
 
@@ -65,7 +65,9 @@ VIDEO-001 safety invariants:
 - Blur configured customer/message selectors before recording sensitive list content, including rendered Merchant Knowledge source names and source URLs/file names.
 - A route with an implicit write is deferred rather than recorded. Merchant Support is currently deferred because loading it can mark unread administrative messages as read.
 - Browser/video output remains under `artifacts/` and is therefore gitignored.
-- `ffmpeg` is used only to trim raw Playwright scene boundaries in VIDEO-001; final composition remains a later task.
+- The capture layout is intentionally 1600×900 CSS pixels rather than 1920×1080 CSS pixels: important Moda UI controls occupy more of the frame, while DPR 2.4 preserves a 3840×2160 recording surface.
+- Chromium also receives the matching `--force-device-scale-factor=2.4` compositor setting. Context DPR alone can produce a 4K container with a smaller recording padded in gray; the offline video smoke check verifies actual page pixels at the frame edges as well as dimensions and codecs.
+- `ffmpeg` trims raw Playwright scene boundaries with VP9/CRF 8 so small UI text survives the intermediate stage; VIDEO-003 performs the final 4K H.264 render.
 
 The normal merchant walkthrough remains strictly read-only. The onboarding recorder is a separate, explicitly mutating exception for a **fresh disposable development store**. It persists the Store Category/item types and selects the configured Shopify-hosted Free plan, requires `--confirm-mutation`, refuses stores already beyond fresh onboarding, and records Shopify's hosted plan-selection and approval surfaces before returning to Moda. Development stores may show `Test with this plan` and zero-valued test pricing; this must be described as test billing in narration. The recorder waits for a **healthy** Free-plan Recovery overview before declaring success: a visible overview that still says the subscription could not be safely mapped is treated as incomplete billing reconciliation, not success. The onboarding capture deliberately scrolls through the hero, benefits, how-it-works and pricing sections before returning to the plan CTA so the long-form onboarding page is visible in the recording.
 
@@ -88,7 +90,7 @@ Commands:
 
 - `video:voiceover:setup` — create the isolated Python environment and download Kokoro v1.0 model/voice files;
 - `video:merchant:onboarding:narrate` — synthesize one WAV per cue, validate cue timing, mix the final narration WAV, and generate SRT captions;
-- `video:merchant:onboarding:render` — mux the edited video, narration and English subtitle track into an H.264/AAC MP4 while retaining the sidecar SRT for YouTube.
+- `video:merchant:onboarding:render` — render/mux the onboarding source, narration and English subtitle track into the same 3840×2160 H.264/AAC quality profile while retaining the sidecar SRT for YouTube.
 
 Narration generation is deterministic with respect to checked-in text/start times plus `VOICEOVER_VOICE`, `VOICEOVER_LANGUAGE` and `VOICEOVER_SPEED`. It refuses overlapping narration cues and refuses narration that extends beyond the source video. Model files, generated WAVs, captions, reports and MP4 output remain under gitignored `artifacts/`.
 
@@ -106,8 +108,16 @@ Inputs:
 Commands:
 
 - `video:merchant:narrate` — synthesize Kokoro narration per scene, validate cue overlap, calculate any required end-frame hold, generate the global SRT, and write a source-integrity report;
-- `video:merchant:render` — apply reviewed internal loading cuts, render each narrated scene at 1920×1080/H.264/AAC, concatenate scenes in registry order, and mux the English subtitle track into the final MP4.
+- `video:merchant:render` — apply reviewed internal loading cuts, render each narrated scene directly at 3840×2160/H.264/AAC using x264 `slow`/CRF 12, concatenate scenes in registry order, and mux the English subtitle track into the final MP4.
 
 The renderer never discovers scenes with a wildcard. It follows the enabled scene registry exactly and therefore ignores stale duplicate clips. Scene source size/mtime are recorded during narration and checked again before rendering; recaptured footage requires narration regeneration.
+
+For a local offline quality check with the installed Playwright Chromium and
+FFmpeg/ffprobe, run `VIDEO_QUALITY_SMOKE=1 npx vitest run automation/tests/video-quality.integration.test.ts`.
+It records a synthetic page, trims it through the production helper, renders both
+final-video paths with generated silent audio/captions, and verifies pixels,
+codecs and dimensions. It uses isolated temporary output and makes no store,
+customer, authentication or model calls. The normal unit run skips this optional
+tool-dependent check; a release verification should run it explicitly.
 
 The Recovery Settings narration is written for the production Shopify listing: it describes Moda AI discount selection as a normal available mode and must not introduce "future capability" language.

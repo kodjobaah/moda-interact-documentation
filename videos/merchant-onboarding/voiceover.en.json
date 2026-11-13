@@ -1,0 +1,35 @@
+{
+  "id": "moda-interact-shopify-onboarding-free-plan-voiceover",
+  "locale": "en",
+  "source": "01-onboarding-free-plan",
+  "voice": "bf_emma",
+  "language": "en-gb",
+  "speed": 1.08,
+  "cues": [
+    {
+      "id": "intro",
+      "startSeconds": 0.7,
+      "text": "Getting started with Moda Interact takes just a few steps in Shopify."
+    },
+    {
+      "id": "store-context",
+      "startSeconds": 4.9,
+      "text": "Choose your store category, then select the product types you sell. This helps Moda Interact tailor recovery conversations to your business."
+    },
+    {
+      "id": "product-explanation",
+      "startSeconds": 13.6,
+      "text": "Moda Interact turns abandoned checkouts into AI-powered WhatsApp conversations, helping you reconnect with shoppers in their preferred language."
+    },
+    {
+      "id": "shopify-plan",
+      "startSeconds": 22.6,
+      "text": "Shopify securely manages plan selection and billing. For this development store, we'll test the Free plan, which includes five lifetime recovery conversations."
+    },
+    {
+      "id": "complete",
+      "startSeconds": 33.0,
+      "text": "Once Shopify confirms the plan, setup completes and the store is ready to recover abandoned checkouts."
+    }
+  ]
+}
